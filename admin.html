@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DotTech | Admin Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: { green: '#109B74', blue: '#257EA6' } }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'] } } } }
+    </script>
+    <style>
+        body { background-color: #f3f4f6; color: #111827; }
+        .glass-panel { background: white; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="min-h-screen pt-20 pb-12">
+
+    <nav class="fixed w-full top-0 z-50 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="font-display font-bold text-xl text-gray-900">DotTech <span class="text-brand-green">Admin</span></span>
+            </div>
+            <a href="index.html" class="text-sm font-medium text-gray-500 hover:text-gray-900">Back to Website</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <!-- Auth Check Warning -->
+        <div id="auth-warning" class="text-center py-20">
+            <h2 class="font-display text-3xl font-bold mb-4">Admin Access Required</h2>
+            <p class="text-gray-500 mb-6">Please sign in with your administrator account to view orders.</p>
+            <a href="auth.html" class="bg-gray-900 text-white px-6 py-3 rounded-xl font-medium">Go to Sign In</a>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" class="hidden">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h1 class="font-display text-4xl font-bold text-gray-900">Incoming Orders</h1>
+                    <p class="text-gray-500 mt-2">Manage customer checkouts and contact them for delivery.</p>
+                </div>
+                <button onclick="window.adminAPI.loadOrders()" class="flex items-center gap-2 text-sm font-medium text-brand-green hover:underline">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Refresh List
+                </button>
+            </div>
+
+            <div id="orders-grid" class="grid gap-6">
+                <div class="text-center text-gray-400 py-10">Loading orders...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
+            authDomain: "dottech-website.firebaseapp.com",
+            projectId: "dottech-website",
+            storageBucket: "dottech-website.firebasestorage.app",
+            messagingSenderId: "1081481170332",
+            appId: "1:1081481170332:web:189c741dd1b21250b48c59"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'dottech-store';
+
+        // Set your admin email here
+        const ADMIN_EMAIL = "dottech.syria@gmail.com";
+
+        window.adminAPI = {
+            loadOrders: async () => {
+                const grid = document.getElementById('orders-grid');
+                grid.innerHTML = '<div class="text-center text-gray-400 py-10">Fetching secure data...</div>';
+                
+                try {
+                    const q = query(collection(db, 'artifacts', appId, 'orders'), orderBy('date', 'desc'));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if(querySnapshot.empty) {
+                        grid.innerHTML = '<div class="glass-panel p-10 text-center text-gray-500">No orders found.</div>';
+                        return;
+                    }
+
+                    let html = '';
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const orderId = doc.id;
+                        const date = new Date(data.date).toLocaleString();
+                        const isCompleted = data.status === 'completed';
+                        
+                        let itemsHtml = data.items.map(i => `<div class="flex justify-between text-sm py-1 border-b border-gray-50 last:border-0"><span class="text-gray-700">${i.qty}x ${i.name}</span><span class="font-medium">${i.price}</span></div>`).join('');
+                        
+                        // Clean phone number for WhatsApp URL
+                        const waPhone = (data.customerPhone || '').replace(/[^0-9+]/g, '');
+
+                        html += `
+                        <div class="glass-panel p-6 ${isCompleted ? 'opacity-60' : ''}" id="order-${orderId}">
+                            <div class="flex flex-col md:flex-row justify-between gap-6">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${isCompleted ? 'bg-gray-100 text-gray-500' : 'bg-brand-green/10 text-brand-green'}">${isCompleted ? 'Completed' : 'New Order'}</span>
+                                        <span class="text-xs text-gray-400 font-mono">${orderId}</span>
+                                    </div>
+                                    <h3 class="font-display text-xl font-bold text-gray-900">${data.customerName}</h3>
+                                    <p class="text-sm text-gray-500 mb-4">${date}</p>
+                                    
+                                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Order Items</div>
+                                        ${itemsHtml}
+                                        <div class="flex justify-between mt-3 pt-3 border-t border-gray-200 font-bold">
+                                            <span>Total</span><span class="text-brand-green">$${data.total.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="md:w-64 flex flex-col gap-3 justify-center border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
+                                    <div class="mb-2">
+                                        <div class="text-xs text-gray-500 mb-1">Contact</div>
+                                        <div class="font-medium text-sm break-all">${data.customerPhone}</div>
+                                        <div class="text-sm text-gray-500 break-all">${data.customerEmail}</div>
+                                    </div>
+                                    
+                                    <a href="https://wa.me/${waPhone}?text=Hello ${encodeURIComponent(data.customerName)}, we received your DotTech order!" target="_blank" class="w-full text-center bg-[#25D366] text-white px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                                        WhatsApp Message
+                                    </a>
+                                    <a href="mailto:${data.customerEmail}?subject=Your DotTech Order" class="w-full text-center bg-gray-900 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">
+                                        Send Email
+                                    </a>
+                                    
+                                    ${!isCompleted ? `<button onclick="window.adminAPI.markCompleted('${orderId}')" class="w-full text-center mt-2 border border-brand-green text-brand-green px-4 py-2 rounded-lg font-medium text-sm hover:bg-brand-green hover:text-white transition-colors">Mark Completed</button>` : ''}
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    grid.innerHTML = html;
+                } catch(e) {
+                    grid.innerHTML = '<div class="text-red-500 text-center py-10">Error loading orders. You may not have database permissions.</div>';
+                    console.error(e);
+                }
+            },
+
+            markCompleted: async (orderId) => {
+                if(!confirm("Mark this order as completed and delivered?")) return;
+                try {
+                    await updateDoc(doc(db, 'artifacts', appId, 'orders', orderId), { status: 'completed' });
+                    window.adminAPI.loadOrders();
+                } catch(e) {
+                    alert("Error updating order.");
+                }
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            const warning = document.getElementById('auth-warning');
+            const content = document.getElementById('dashboard-content');
+            
+            if (user && user.email === ADMIN_EMAIL) {
+                warning.classList.add('hidden');
+                content.classList.remove('hidden');
+                window.adminAPI.loadOrders();
+            } else {
+                warning.classList.remove('hidden');
+                content.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
