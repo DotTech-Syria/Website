@@ -88,7 +88,11 @@
             <!-- Login View -->
             <div id="view-login" class="block">
                 <input type="email" id="log-email" placeholder="Email Address" class="input-field mb-4">
-                <input type="password" id="log-password" placeholder="Password" class="input-field mb-6">
+                <input type="password" id="log-password" placeholder="Password" class="input-field mb-2">
+                
+                <div class="text-right mb-6">
+                    <button onclick="window.authAPI.resetPassword()" class="text-sm text-brand-teal hover:underline font-medium">Forgot Password?</button>
+                </div>
                 
                 <button onclick="window.authAPI.emailSignIn()" class="w-full bg-gray-900 text-white font-sans font-semibold py-3.5 rounded-xl hover:bg-brand-green transition-colors shadow-lg mb-4">
                     Sign In
@@ -98,7 +102,8 @@
             <!-- Register View -->
             <div id="view-register" class="hidden">
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <input type="text" id="reg-name" placeholder="Full Name" class="input-field col-span-2">
+                    <input type="text" id="reg-fname" placeholder="First Name" class="input-field col-span-1">
+                    <input type="text" id="reg-lname" placeholder="Last Name" class="input-field col-span-1">
                     <input type="tel" id="reg-phone" placeholder="Phone Number" class="input-field col-span-2">
                 </div>
                 <input type="email" id="reg-email" placeholder="Email Address" class="input-field mb-4">
@@ -126,10 +131,10 @@
     <!-- Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
+        // ... existing config ...
             apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
             authDomain: "dottech-website.firebaseapp.com",
             projectId: "dottech-website",
@@ -152,16 +157,16 @@
             setTimeout(() => errEl.classList.add('hidden'), 5000);
         };
 
-        const saveExtraInfo = async (user, name, phone) => {
+        const saveExtraInfo = async (user, fName, lName, phone) => {
             try {
-                // Rules: ALWAYS use /artifacts/{appId}/users/{userId}/{collectionName} for private data
                 await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'), {
-                    fullName: name,
+                    firstName: fName,
+                    lastName: lName,
                     phoneNumber: phone,
                     email: user.email,
                     createdAt: new Date()
-                });
-                await updateProfile(user, { displayName: name });
+                }, { merge: true });
+                await updateProfile(user, { displayName: fName + ' ' + lName });
             } catch (e) {
                 console.error("Error saving profile info", e);
             }
@@ -174,14 +179,15 @@
                 }).catch(window.showError);
             },
             emailSignUp: () => {
-                const n = document.getElementById('reg-name').value;
+                const f = document.getElementById('reg-fname').value;
+                const l = document.getElementById('reg-lname').value;
                 const p = document.getElementById('reg-phone').value;
                 const e = document.getElementById('reg-email').value;
                 const pw = document.getElementById('reg-password').value;
-                if(!n || !p || !e || !pw) return window.showError("Please fill in all fields.");
+                if(!f || !l || !p || !e || !pw) return window.showError("Please fill in all fields.");
                 
                 createUserWithEmailAndPassword(auth, e, pw).then(async (cred) => {
-                    await saveExtraInfo(cred.user, n, p);
+                    await saveExtraInfo(cred.user, f, l, p);
                     window.location.href = 'index.html';
                 }).catch(window.showError);
             },
@@ -192,6 +198,13 @@
                 
                 signInWithEmailAndPassword(auth, e, p).then(() => {
                     window.location.href = 'index.html';
+                }).catch(window.showError);
+            },
+            resetPassword: () => {
+                const e = document.getElementById('log-email').value;
+                if(!e) return window.showError("Please enter your email in the Email Address field to reset.");
+                sendPasswordResetEmail(auth, e).then(() => {
+                    window.showError({message: "Password reset link sent to your email!"});
                 }).catch(window.showError);
             }
         };
