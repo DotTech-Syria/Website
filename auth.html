@@ -68,7 +68,7 @@
             </a>
 
             <div class="relative z-10 mt-12 mb-8">
-                <img src="./logo.png" alt="DotTech" class="h-10 mb-8 filter brightness-0 invert" onerror="this.style.display='none'">
+                <img src="./logo2.png" alt="DotTech" class="h-10 mb-8 filter brightness-0 invert" onerror="this.style.display='none'">
                 <h1 class="font-display text-4xl md:text-5xl font-bold leading-tight mb-4">Join the Future.</h1>
                 <p class="font-sans text-gray-300 font-light">Create an account to track orders, save preferences, and access premium tech consulting.</p>
             </div>
@@ -134,7 +134,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ... existing config ...
+        const firebaseConfig = {
             apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
             authDomain: "dottech-website.firebaseapp.com",
             projectId: "dottech-website",
