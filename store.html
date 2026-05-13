@@ -5,47 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DotTech | Store</title>
     
-    <!-- Next-Gen Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { brand: { green: '#109B74', teal: '#1B8A98', blue: '#257EA6' } },
-                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], arabic: ['Tajawal', 'sans-serif'] }
+                    colors: {
+                        brand: { green: '#109B74', teal: '#1B8A98', blue: '#257EA6' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        arabic: ['Tajawal', 'sans-serif'],
+                    }
                 }
             }
         }
     </script>
 
     <style>
-        :root { --bg-color: #f8fafc; --text-main: #0a0a0a; }
+        :root { --bg-color: #ffffff; --text-main: #0a0a0a; }
         body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         html[dir="rtl"] body, html[dir="rtl"] .font-display, html[dir="rtl"] .font-sans { font-family: 'Tajawal', sans-serif !important; }
         ::selection { background-color: rgba(16, 155, 116, 0.2); color: #109B74; }
-        .text-gradient { background: linear-gradient(135deg, #109B74 0%, #257EA6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+        .glass-nav { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.03); }
         .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; opacity: 0.8; }
+
+        .product-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(0, 0, 0, 0.05); transition: all 0.4s ease; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); border-color: rgba(16, 155, 116, 0.3); }
+        .product-img-wrapper img { transition: transform 0.6s ease; }
+        .product-card:hover .product-img-wrapper img { transform: scale(1.05); }
         
-        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; opacity: 0.5; }
-
-        .product-card { background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.05); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); transition: all 0.4s ease; display: flex; flex-direction: column; height: 100%; }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(16, 155, 116, 0.15); border-color: rgba(16, 155, 116, 0.3); }
-        .img-wrapper { overflow: hidden; border-radius: 0.75rem; background: #f1f5f9; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
-        .img-wrapper img { transition: transform 0.6s ease; max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; }
-        .product-card:hover .img-wrapper img { transform: scale(1.1); }
-
-        #cart-drawer { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .cart-open { transform: translateX(0) !important; }
-        #toast-notification { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); transform: translateY(100px); opacity: 0; }
-        #toast-notification.show { transform: translateY(0); opacity: 1; }
+        .btn-elegant { position: relative; overflow: hidden; transition: all 0.5s ease; z-index: 1; }
+        .btn-elegant::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #109B74 0%, #257EA6 100%); z-index: -1; transition: opacity 0.5s ease; opacity: 1; }
+        .btn-elegant:hover::before { opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -55,25 +55,26 @@
     <nav class="fixed w-full top-0 z-50 glass-nav transition-all duration-300">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12 py-5 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 group">
-                <img src="./logo.png" alt="DotTech Logo" class="h-7 object-contain transition-transform group-hover:scale-105" onerror="this.outerHTML='<span class=\'font-display font-bold text-2xl tracking-tighter text-gradient\'>DotTech.</span>'">
+                <img src="./logo.png" alt="DotTech Logo" class="h-7 object-contain transition-transform group-hover:scale-105" onerror="this.outerHTML='<span class=\'font-display font-bold text-2xl tracking-tighter text-gray-900\'>DotTech.</span>'">
             </a>
             
             <div class="hidden lg:flex items-center gap-8 font-sans text-sm font-medium tracking-wide">
-                <a href="index.html" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_home">Home</a>
-                <a href="#products-grid" class="text-brand-green font-bold transition-colors" data-i18n="nav_store">Store</a>
+                <a href="index.html#about" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_story">Our Story</a>
+                <a href="index.html#services" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_expertise">Expertise</a>
+                <a href="index.html#vision" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_future">Future</a>
+                <a href="index.html#contact" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_contact">Initiate Contact</a>
             </div>
 
             <div class="flex items-center gap-5">
-                <button onclick="toggleLanguage()" id="lang-toggle-btn" class="font-sans text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-brand-green transition-colors">AR</button>
-                <div class="w-px h-5 bg-gray-300 mx-2"></div>
+                <button onclick="toggleLanguage()" id="lang-toggle-btn" class="font-sans text-xs font-bold tracking-widest uppercase border border-gray-300 px-3 py-1 rounded-full hover:border-brand-green hover:text-brand-green transition-all">AR</button>
+                
                 <button onclick="toggleCart()" class="relative text-gray-900 hover:text-brand-green transition-colors group">
                     <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     <span id="cart-badge" class="absolute -top-1.5 -right-2 bg-brand-green text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">0</span>
                 </button>
-                <div class="relative pl-2" id="auth-wrapper">
-                    <button id="auth-login-btn" onclick="window.location.href='auth.html'" class="text-gray-900 hover:text-brand-green transition-all hover:scale-110 flex items-center">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    </button>
+
+                <div class="relative pl-2 border-l border-gray-200" id="auth-wrapper">
+                    <button id="auth-login-btn" onclick="window.location.href='auth.html'" class="text-gray-900 hover:text-brand-green transition-all hover:scale-110 flex items-center"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></button>
                     <div id="user-profile-menu" class="hidden items-center cursor-pointer group" onclick="toggleUserDropdown()">
                         <img id="user-avatar" src="" class="w-7 h-7 rounded-full border border-gray-200 object-cover" alt="User">
                         <div id="user-dropdown" class="absolute top-10 ltr:right-0 rtl:left-0 bg-white border border-gray-100 rounded-xl shadow-xl py-2 w-48 hidden opacity-0 transition-opacity">
@@ -81,68 +82,84 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Mobile Menu Hamburger -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-gray-900 hover:text-brand-green transition-colors pl-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
             </div>
         </div>
     </nav>
 
-    <section class="pt-32 pb-16 relative">
-        <div class="max-w-screen-2xl mx-auto px-6 lg:px-12 text-center reveal">
-            <h1 class="font-display text-5xl md:text-7xl font-semibold tracking-tighter text-gray-900 mb-6" data-i18n="store_hero_title">Hardware & Gear.</h1>
-            <p class="font-sans text-xl text-gray-500 max-w-2xl mx-auto" data-i18n="store_hero_desc">Explore our curated collection of premium components, peripherals, and smart accessories.</p>
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-[100] transform ltr:translate-x-full rtl:-translate-x-full transition-transform duration-300 flex flex-col hidden">
+        <div class="p-6 flex items-center justify-between border-b border-gray-100">
+            <span class="font-display font-bold text-2xl text-gradient">Menu</span>
+            <button onclick="toggleMobileMenu()" class="p-2 hover:bg-gray-100 rounded-full transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
-    </section>
+        <div class="flex flex-col p-6 gap-6 font-display text-xl">
+            <a href="index.html#about" onclick="toggleMobileMenu()" class="hover:text-brand-green" data-i18n="nav_story">Our Story</a>
+            <a href="index.html#services" onclick="toggleMobileMenu()" class="hover:text-brand-green" data-i18n="nav_expertise">Expertise</a>
+            <a href="store.html" onclick="toggleMobileMenu()" class="hover:text-brand-green" data-i18n="nav_store">Store</a>
+            <a href="index.html#vision" onclick="toggleMobileMenu()" class="hover:text-brand-green" data-i18n="nav_future">Future</a>
+            <a href="index.html#contact" onclick="toggleMobileMenu()" class="hover:text-brand-green" data-i18n="nav_contact">Initiate Contact</a>
+        </div>
+    </div>
 
-    <section id="products-grid" class="py-12 min-h-screen relative z-10">
+    <section class="pt-40 pb-32 bg-white/80 backdrop-blur-md relative min-h-screen">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
-            <!-- Dynamic Products Container -->
-            <div id="store-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
-                <div class="col-span-full text-center py-20">
-                    <div class="inline-block w-8 h-8 border-4 border-gray-200 border-t-brand-green rounded-full animate-spin mb-4"></div>
-                    <p class="text-gray-500 font-sans" data-i18n="loading_store">Loading inventory from Google Sheets...</p>
-                </div>
+            <div class="mb-16 reveal">
+                <h1 class="font-display text-5xl md:text-7xl font-semibold tracking-tighter" data-i18n="store_title">Hardware & Gear.</h1>
+                <p class="font-sans text-xl text-gray-500 font-light mt-4" data-i18n="store_desc">Premium tech gear curated by experts. No gimmicks.</p>
+            </div>
+            
+            <div id="full-store-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Fetched via JS -->
+                <div class="col-span-full text-center py-12 text-gray-400 font-sans animate-pulse">Loading full catalog...</div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="bg-white pt-16 pb-8 border-t border-gray-100 relative z-10">
-        <div class="max-w-screen-2xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-2">
-                <img src="./logo.png" alt="DotTech" class="h-5 object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all" onerror="this.style.display='none'">
-                <span class="font-display font-semibold text-gray-900 tracking-tight">DotTech.</span>
-            </div>
-            <div class="font-sans text-sm text-gray-400" data-i18n="footer_rights">© 2026 DotTech. All rights reserved.</div>
-        </div>
-    </footer>
 
     <!-- Cart Drawer -->
-    <div id="cart-drawer" class="fixed top-0 bottom-0 ltr:right-0 rtl:left-0 w-full md:w-[400px] bg-white/95 backdrop-blur-xl shadow-2xl z-[100] transform ltr:translate-x-full rtl:-translate-x-full border-l border-gray-100 flex flex-col">
-        <div class="p-6 flex items-center justify-between border-b border-gray-100">
-            <h2 class="font-display text-2xl font-semibold">Your Cart</h2>
+    <div id="cart-drawer" class="fixed top-0 bottom-0 ltr:-right-[400px] rtl:-left-[400px] w-full max-w-[400px] bg-white shadow-2xl z-[100] transition-all duration-300 flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+            <h2 class="font-display text-2xl font-bold">Your Cart</h2>
             <button onclick="toggleCart()" class="p-2 hover:bg-gray-100 rounded-full transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
-            <div id="empty-cart-msg" class="text-center text-gray-500 font-sans mt-10">Your cart is currently empty.</div>
-        </div>
-        <div class="p-6 border-t border-gray-100 bg-gray-50/50">
-            <div class="flex justify-between items-center mb-6">
-                <span class="font-sans text-gray-500">Total:</span>
-                <span id="cart-total-price" class="font-display text-2xl font-semibold">$0.00</span>
+        <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-4" id="cart-items-container"></div>
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between font-display font-bold text-xl mb-4 text-gray-900">
+                <span>Total</span><span id="cart-total">$0.00</span>
             </div>
-            <button class="w-full bg-brand-green text-white font-sans font-semibold py-4 rounded-xl hover:bg-[#0e8563] transition-colors shadow-lg shadow-brand-green/20">Checkout</button>
+            <button onclick="checkout()" class="w-full btn-elegant text-white font-semibold py-4 rounded-xl shadow-lg hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                Checkout securely <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
         </div>
     </div>
     <div id="cart-backdrop" onclick="toggleCart()" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[90] hidden opacity-0 transition-opacity duration-300"></div>
 
+    <!-- Complete Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-[120] hidden items-center justify-center opacity-0 transition-opacity duration-300 px-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="bg-white rounded-3xl w-full max-w-md relative z-10 shadow-2xl p-8 transform scale-95 transition-transform duration-300" id="profile-modal-inner">
+            <h2 class="font-display text-2xl font-bold mb-2 text-gray-900">Complete Profile</h2>
+            <p class="text-gray-500 text-sm mb-6 font-sans">Please provide your details to process orders.</p>
+            <input type="text" id="prof-fname" placeholder="First Name" class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-4 focus:border-brand-green outline-none font-sans">
+            <input type="text" id="prof-lname" placeholder="Last Name" class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-4 focus:border-brand-green outline-none font-sans">
+            <input type="tel" id="prof-phone" placeholder="Phone Number" class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-6 focus:border-brand-green outline-none font-sans">
+            <button onclick="window.dbAPI.saveProfile()" class="w-full bg-brand-green text-white font-semibold py-3 rounded-xl hover:shadow-lg transition-all font-sans">Save Details</button>
+        </div>
+    </div>
+
     <!-- Toast -->
-    <div id="toast-notification" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] bg-gray-900 text-white px-6 py-3 rounded-full font-sans text-sm flex items-center gap-3 shadow-2xl">
-        <svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        <span id="toast-msg">Item added to cart</span>
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 text-white px-6 py-4 rounded-xl shadow-2xl z-[150] flex items-center gap-3 font-sans">
+        <svg class="w-5 h-5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span>Added to cart</span>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
@@ -156,6 +173,28 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'dottech-store';
+
+        window.dbAPI = {
+            syncCart: async (cartItems) => {
+                if(!auth.currentUser) return;
+                await setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'cart', 'data'), { items: cartItems });
+            },
+            saveProfile: async () => {
+                const f = document.getElementById('prof-fname').value;
+                const l = document.getElementById('prof-lname').value;
+                const p = document.getElementById('prof-phone').value;
+                if(!f || !l || !p) return alert("Please fill in all fields.");
+                if(!auth.currentUser) return;
+                await setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'profile', 'info'), {
+                    firstName: f, lastName: l, phoneNumber: p, email: auth.currentUser.email
+                }, { merge: true });
+                const pModal = document.getElementById('profile-modal');
+                pModal.style.opacity = '0';
+                setTimeout(() => pModal.classList.replace('flex', 'hidden'), 300);
+            }
+        };
 
         window.authAPI = {
             logout: () => {
@@ -166,7 +205,7 @@
             }
         };
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             const loginBtn = document.getElementById('auth-login-btn');
             const profileMenu = document.getElementById('user-profile-menu');
             const avatar = document.getElementById('user-avatar');
@@ -176,228 +215,192 @@
                 profileMenu.classList.remove('hidden');
                 profileMenu.classList.add('flex');
                 avatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=109B74&color=fff`;
+                
+                const profDoc = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
+                if(!profDoc.exists() || !profDoc.data().firstName || !profDoc.data().phoneNumber) {
+                    const pModal = document.getElementById('profile-modal');
+                    pModal.classList.replace('hidden', 'flex');
+                    setTimeout(() => pModal.style.opacity = '1', 10);
+                }
+
+                const cartDoc = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'cart', 'data'));
+                if(cartDoc.exists() && window.setCart) window.setCart(cartDoc.data().items || []);
             } else {
                 loginBtn.classList.remove('hidden');
                 profileMenu.classList.add('hidden');
                 profileMenu.classList.remove('flex');
+                if(window.setCart) window.setCart([]);
             }
         });
     </script>
 
     <script>
-        /* --- i18n --- */
-        const translations = {
-            en: { nav_home: "Home", nav_store: "Store", store_hero_title: "Hardware & Gear.", store_hero_desc: "Explore our curated collection of premium components, peripherals, and smart accessories.", btn_cart: "Add to Cart", footer_rights: "© 2026 DotTech. All rights reserved.", loading_store: "Loading inventory..." },
-            ar: { nav_home: "الرئيسية", nav_store: "المتجر", store_hero_title: "العتاد والملحقات.", store_hero_desc: "استكشف مجموعتنا المختارة من المكونات الممتازة والملحقات الذكية.", btn_cart: "أضف للسلة", footer_rights: "© ٢٠٢٦ دوت تك. جميع الحقوق محفوظة.", loading_store: "جاري تحميل المنتجات..." }
-        };
-
-        let currentLang = localStorage.getItem('dottech_lang') || 'en';
-        function applyLanguage(lang) {
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            const btn = document.getElementById('lang-toggle-btn');
-            if (btn) btn.textContent = lang === 'en' ? 'AR' : 'EN';
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
-            });
-            renderCart();
-        }
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'ar' : 'en';
-            localStorage.setItem('dottech_lang', currentLang);
-            applyLanguage(currentLang);
-            fetchProducts();
-        }
-        document.addEventListener("DOMContentLoaded", () => { applyLanguage(currentLang); fetchProducts(); reveal(); });
-
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                if (reveals[i].getBoundingClientRect().top < window.innerHeight - 50) reveals[i].classList.add("active");
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden'); setTimeout(() => menu.classList.remove('ltr:translate-x-full', 'rtl:-translate-x-full'), 10);
+            } else {
+                menu.classList.add('ltr:translate-x-full', 'rtl:-translate-x-full'); setTimeout(() => menu.classList.add('hidden'), 300);
             }
         }
-        window.addEventListener("scroll", reveal);
-
         function toggleUserDropdown() {
-            const dropdown = document.getElementById('user-dropdown');
-            if (dropdown.classList.contains('hidden')) { dropdown.classList.remove('hidden'); setTimeout(() => dropdown.style.opacity = '1', 10); }
-            else { dropdown.style.opacity = '0'; setTimeout(() => dropdown.classList.add('hidden'), 200); }
+            const menu = document.getElementById('user-dropdown');
+            if(menu.classList.contains('hidden')) { menu.classList.remove('hidden'); setTimeout(() => menu.style.opacity = '1', 10); } 
+            else { menu.style.opacity = '0'; setTimeout(() => menu.classList.add('hidden'), 200); }
         }
 
-        /* --- Fetch Data --- */
-        function getCell(row, index) { 
-            if (!row || !row.c || !row.c[index]) return '';
-            return row.c[index].v !== null && row.c[index].v !== undefined ? row.c[index].v : ''; 
-        }
-
-        async function fetchProducts() {
-            const container = document.getElementById('store-container');
-            try {
-                const res = await fetch(`https://docs.google.com/spreadsheets/d/1onrTRPtJVMCVRTRI0zVm5lv_ra1PCZAnXHLpjFslMQs/gviz/tq?tqx=out:json`);
-                const text = await res.text();
-                
-                // If the response is an HTML page, it means the Google Sheet is set to "Restricted"
-                if (text.trim().startsWith('<')) {
-                    throw new Error("Your Google Sheet is restricted. Please click 'Share' in Google Sheets and set General Access to 'Anyone with the link'.");
-                }
-
-                const jsonString = text.substring(text.indexOf("({") + 1, text.lastIndexOf("})") + 1);
-                const data = JSON.parse(jsonString);
-                const rows = data.table.rows;
-                
-                if (!rows || rows.length <= 1) {
-                    throw new Error("No products found in the sheet. Ensure you have data filled out below row 1.");
-                }
-
-                let html = '';
-                let count = 0;
-                
-                for(let i = 1; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (!row || !row.c) continue; // Skip completely empty rows
-                    
-                    // Safely extract data from columns A(0) to D(3)
-                    const img = getCell(row, 0) || 'https://placehold.co/800/f8f9fa/109B74?text=Product';
-                    const name = getCell(row, 1) || 'Unnamed Product';
-                    const desc = getCell(row, 2) || '';
-                    const priceFormatted = getCell(row, 3) || '$0.00';
-                    const safePrice = parseFloat(String(priceFormatted).replace(/[^0-9.-]+/g,"")) || 0;
-
-                    html += `
-                    <div class="product-card rounded-2xl p-4 flex flex-col reveal active">
-                        <div class="img-wrapper rounded-xl mb-6 bg-gray-50 aspect-square flex items-center justify-center p-4">
-                            <img src="${img}" alt="${name}" class="w-full h-full object-contain mix-blend-multiply">
-                        </div>
-                        <h3 class="font-display text-xl font-semibold mb-1">${name}</h3>
-                        <p class="font-sans text-sm text-gray-500 mb-6 flex-1">${desc}</p>
-                        <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                            <span class="font-sans font-semibold text-lg text-brand-teal">${priceFormatted}</span>
-                            <button onclick="addToCart('${i}', '${name.replace(/'/g, "\\'")}', ${safePrice}, '${img}')" class="bg-gray-900 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full hover:bg-brand-green transition-colors">${translations[currentLang].btn_cart}</button>
-                        </div>
-                    </div>`;
-                    count++;
-                }
-                
-                if (count === 0) {
-                    throw new Error("No valid products found in rows. Check your columns.");
-                }
-                
-                container.innerHTML = html;
-            } catch (e) { 
-                console.error("Fetch Error:", e);
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-20 bg-red-50 rounded-2xl border border-red-100">
-                        <div class="text-red-500 font-display text-xl font-semibold mb-2">Connection Error</div>
-                        <div class="text-red-400 font-sans max-w-md mx-auto">${e.message}</div>
-                    </div>`; 
-            }
-        }
-
-        /* --- Cart Logic --- */
         let cart = [];
+        window.setCart = function(newCart) { cart = newCart; updateCartBadge(); renderCart(); };
+
         function addToCart(id, name, price, img) {
             const existingItem = cart.find(item => item.id === id);
             if (existingItem) existingItem.qty += 1;
             else cart.push({ id, name, price, img, qty: 1 });
             updateCartBadge(); renderCart(); showToast();
+            if(window.dbAPI) window.dbAPI.syncCart(cart);
         }
+
         function removeFromCart(id) {
             cart = cart.filter(item => item.id !== id);
             updateCartBadge(); renderCart();
-        }
-        function updateCartBadge() {
-            const badge = document.getElementById('cart-badge');
-            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-            badge.innerText = totalItems;
-            if(totalItems > 0) { badge.classList.add('animate-bounce'); setTimeout(() => badge.classList.remove('animate-bounce'), 1000); }
-        }
-        function renderCart() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            const totalPriceEl = document.getElementById('cart-total-price');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-            
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = ''; cartItemsContainer.appendChild(emptyMsg); emptyMsg.style.display = 'block'; totalPriceEl.innerText = '$0.00'; return;
-            }
-            emptyMsg.style.display = 'none';
-            let html = '', total = 0;
-            cart.forEach(item => {
-                total += item.price * item.qty;
-                html += `
-                <div class="flex gap-4 items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
-                    <img src="${item.img}" class="w-16 h-16 rounded-lg object-cover mix-blend-multiply bg-white">
-                    <div class="flex-1">
-                        <h4 class="font-display font-semibold text-sm line-clamp-1">${item.name}</h4>
-                        <div class="text-brand-green font-sans font-medium text-sm">$${item.price.toFixed(2)}</div>
-                        <div class="text-xs text-gray-400 mt-1">Qty: ${item.qty}</div>
-                    </div>
-                    <button onclick="removeFromCart('${item.id}')" class="text-red-400 hover:text-red-600 p-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
-                </div>`;
-            });
-            cartItemsContainer.innerHTML = html;
-            totalPriceEl.innerText = `$${total.toFixed(2)}`;
-        }
-        function toggleCart() {
-            const drawer = document.getElementById('cart-drawer');
-            const backdrop = document.getElementById('cart-backdrop');
-            if (drawer.classList.contains('cart-open')) { drawer.classList.remove('cart-open'); backdrop.style.opacity = '0'; setTimeout(() => backdrop.classList.add('hidden'), 300); } 
-            else { drawer.classList.add('cart-open'); backdrop.classList.remove('hidden'); setTimeout(() => backdrop.style.opacity = '1', 10); }
-        }
-        function showToast() {
-            const toast = document.getElementById('toast-notification');
-            toast.classList.add('show'); setTimeout(() => { toast.classList.remove('show'); }, 3000);
+            if(window.dbAPI) window.dbAPI.syncCart(cart);
         }
 
-        /* --- WebGL Background --- */
-        window.addEventListener('load', () => {
-            const script = document.createElement('script');
-            script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-            script.onload = init3DTechBackground;
-            document.head.appendChild(script);
-        });
+        function updateCartBadge() { document.getElementById('cart-badge').textContent = cart.reduce((sum, item) => sum + item.qty, 0); }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total');
+            container.innerHTML = ''; let total = 0;
+            
+            if(cart.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-400 mt-10">Your cart is empty.</div>`;
+                totalEl.textContent = '$0.00'; return;
+            }
+
+            cart.forEach(item => {
+                const numPrice = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+                total += numPrice * item.qty;
+                container.innerHTML += `
+                    <div class="flex gap-4 items-center bg-white border border-gray-100 p-3 rounded-xl">
+                        <img src="${item.img}" class="w-16 h-16 object-cover rounded-lg bg-gray-50">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-sm line-clamp-1">${item.name}</h4>
+                            <p class="text-brand-green font-bold text-sm">${item.price}</p>
+                            <div class="text-xs text-gray-500 mt-1">Qty: ${item.qty}</div>
+                        </div>
+                        <button onclick="removeFromCart('${item.id}')" class="text-red-400 hover:text-red-600 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                    </div>`;
+            });
+            totalEl.textContent = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer'); const backdrop = document.getElementById('cart-backdrop');
+            const isRtl = document.documentElement.dir === 'rtl';
+            if (backdrop.classList.contains('hidden')) {
+                backdrop.classList.remove('hidden'); setTimeout(() => backdrop.style.opacity = '1', 10);
+                if(isRtl) drawer.classList.replace('rtl:-left-[400px]', 'rtl:left-0'); else drawer.classList.replace('ltr:-right-[400px]', 'ltr:right-0');
+            } else {
+                backdrop.style.opacity = '0'; setTimeout(() => backdrop.classList.add('hidden'), 300);
+                if(isRtl) drawer.classList.replace('rtl:left-0', 'rtl:-left-[400px]'); else drawer.classList.replace('ltr:right-0', 'ltr:-right-[400px]');
+            }
+        }
+
+        function showToast() {
+            const t = document.getElementById('toast'); t.classList.replace('translate-y-20', 'translate-y-0'); t.style.opacity = '1';
+            setTimeout(() => { t.classList.replace('translate-y-0', 'translate-y-20'); t.style.opacity = '0'; }, 3000);
+        }
+        function checkout() { alert("Checkout feature coming soon!"); }
+
+        const translations = {
+            en: {
+                nav_story: "Our Story", nav_expertise: "Expertise", nav_store: "Store", nav_future: "Future", nav_contact: "Initiate Contact",
+                store_title: "Hardware & Gear.", store_desc: "Premium tech gear curated by experts. No gimmicks."
+            },
+            ar: {
+                nav_story: "قصتنا", nav_expertise: "خبراتنا", nav_store: "المتجر", nav_future: "المستقبل", nav_contact: "تواصل معنا",
+                store_title: "العتاد والملحقات.", store_desc: "معدات تقنية متميزة مختارة من قبل الخبراء. جودة مضمونة."
+            }
+        };
+
+        let currentLang = localStorage.getItem('dottech_lang') || 'en';
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            const btn = document.getElementById('lang-toggle-btn'); if (btn) btn.textContent = lang === 'en' ? 'AR' : 'EN';
+            document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key]; });
+        }
+        function toggleLanguage() { currentLang = currentLang === 'en' ? 'ar' : 'en'; localStorage.setItem('dottech_lang', currentLang); applyLanguage(currentLang); }
+
+        async function fetchAllProducts() {
+            try {
+                const res = await fetch("https://docs.google.com/spreadsheets/d/1onrTRPtJVMCVRTRI0zVm5lv_ra1PCZAnXHLpjFslMQs/export?format=csv");
+                const txt = await res.text();
+                const rows = txt.split('\n').slice(1);
+                
+                let html = '';
+                rows.forEach((row, index) => {
+                    if(!row.trim()) return;
+                    const cols = row.split(',').map(c => c.replace(/^"|"$/g, '').trim());
+                    if(cols.length >= 4 && cols[1]) {
+                        const img = cols[0]; const name = cols[1]; const desc = cols[2]; const price = cols[3];
+                        html += `
+                        <div class="product-card rounded-2xl p-4 flex flex-col reveal delay-${(index % 4) * 100}">
+                            <div class="product-img-wrapper rounded-xl bg-gray-50 aspect-square mb-6">
+                                <img src="${img}" class="w-full h-full object-cover mix-blend-multiply" onerror="this.src='https://placehold.co/400x400/eee/999?text=Img'">
+                            </div>
+                            <h3 class="font-display text-xl font-semibold mb-1">${name}</h3>
+                            <p class="font-sans text-sm text-gray-400 mb-4">${desc}</p>
+                            <div class="mt-auto flex items-center justify-between">
+                                <span class="font-sans font-medium text-lg">${price}</span>
+                                <button onclick="addToCart('p${index}', '${name.replace(/'/g, "\\'")}', '${price}', '${img}')" class="bg-gray-900 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full hover:bg-brand-green transition-colors">Add</button>
+                            </div>
+                        </div>`;
+                    }
+                });
+                document.getElementById('full-store-grid').innerHTML = html || "<div class='col-span-full'>No products found.</div>";
+            } catch (e) {
+                document.getElementById('full-store-grid').innerHTML = "<div class='col-span-full text-red-500'>Please publish your Products Google Sheet to the web.</div>";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => { applyLanguage(currentLang); fetchAllProducts(); });
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight; var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) reveals[i].classList.add("active");
+            }
+        }
+        window.addEventListener("scroll", reveal); window.addEventListener("load", reveal);
+
+        window.onload = function() {
+            const script = document.createElement('script'); script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+            script.onload = init3DTechBackground; document.head.appendChild(script);
+        };
 
         function init3DTechBackground() {
-            const container = document.getElementById('canvas-container');
-            const scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0xf8fafc, 20, 80);
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 15, 30);
-            camera.lookAt(0, 0, 0);
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(renderer.domElement);
-
-            const gridSize = 100, segments = 40;
-            const geometry = new THREE.PlaneGeometry(gridSize, gridSize, segments, segments);
-            geometry.rotateX(-Math.PI / 2);
-            // Softer color for store background
-            const material = new THREE.PointsMaterial({ color: 0x257EA6, size: 0.1, transparent: true, opacity: 0.4 });
-            const particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-
+            const container = document.getElementById('canvas-container'); const scene = new THREE.Scene(); scene.fog = new THREE.Fog(0xffffff, 20, 80);
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 15, 30); camera.lookAt(0, 0, 0);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); container.appendChild(renderer.domElement);
+            const geometry = new THREE.PlaneGeometry(100, 100, 40, 40); geometry.rotateX(-Math.PI / 2);
+            const material = new THREE.PointsMaterial({ color: 0x1B8A98, size: 0.15, transparent: true, opacity: 0.8 });
+            const particles = new THREE.Points(geometry, material); scene.add(particles);
             const positionAttribute = geometry.getAttribute('position');
-            let mouseX = 0, mouseY = 0;
-            document.addEventListener('mousemove', (event) => { mouseX = (event.clientX - window.innerWidth / 2) * 0.05; mouseY = (event.clientY - window.innerHeight / 2) * 0.05; });
+            let mouseX = 0, mouseY = 0; const windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
+            document.addEventListener('mousemove', (e) => { mouseX = (e.clientX - windowHalfX) * 0.05; mouseY = (e.clientY - windowHalfY) * 0.05; });
             window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
-
             const clock = new THREE.Clock();
             function animate() {
-                requestAnimationFrame(animate);
-                const time = clock.getElapsedTime() * 0.5;
-                const positions = geometry.getAttribute('position');
+                requestAnimationFrame(animate); const time = clock.getElapsedTime() * 0.8; const positions = geometry.getAttribute('position');
                 for (let i = 0; i < positionAttribute.count; i++) {
-                    const x = positions.getX(i), z = positions.getZ(i);
-                    const wave = Math.sin(x * 0.1 + time) * 1.5 + Math.cos(z * 0.1 + time) * 1.5;
-                    positions.setY(i, wave - 5);
+                    const x = positions.getX(i); const z = positions.getZ(i);
+                    const wave = Math.sin(x * 0.2 + time) * 1.5 + Math.cos(z * 0.2 + time) * 1.5 + Math.sin((x + z) * 0.1 - time) * 2; positions.setY(i, wave - 5);
                 }
                 positions.needsUpdate = true;
-                camera.position.x += (mouseX - camera.position.x) * 0.05;
-                camera.position.y += (15 + -mouseY - camera.position.y) * 0.05;
-                camera.lookAt(0, 0, 0);
-                particles.rotation.y = Math.sin(time * 0.05) * 0.1;
-                renderer.render(scene, camera);
+                camera.position.x += (mouseX - camera.position.x) * 0.05; camera.position.y += (15 + -mouseY - camera.position.y) * 0.05; camera.lookAt(0, 0, 0);
+                particles.rotation.y = Math.sin(time * 0.1) * 0.2; renderer.render(scene, camera);
             }
             animate();
         }
