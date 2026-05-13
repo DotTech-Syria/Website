@@ -226,29 +226,48 @@
         }
 
         /* --- Fetch Data --- */
+        function getCell(row, index) { 
+            if (!row || !row.c || !row.c[index]) return '';
+            return row.c[index].v !== null && row.c[index].v !== undefined ? row.c[index].v : ''; 
+        }
+
         async function fetchProducts() {
             const container = document.getElementById('store-container');
             try {
                 const res = await fetch(`https://docs.google.com/spreadsheets/d/1onrTRPtJVMCVRTRI0zVm5lv_ra1PCZAnXHLpjFslMQs/gviz/tq?tqx=out:json`);
                 const text = await res.text();
-                const data = JSON.parse(text.substring(text.indexOf("({") + 1, text.lastIndexOf("})") + 1));
+                
+                // If the response is an HTML page, it means the Google Sheet is set to "Restricted"
+                if (text.trim().startsWith('<')) {
+                    throw new Error("Your Google Sheet is restricted. Please click 'Share' in Google Sheets and set General Access to 'Anyone with the link'.");
+                }
+
+                const jsonString = text.substring(text.indexOf("({") + 1, text.lastIndexOf("})") + 1);
+                const data = JSON.parse(jsonString);
                 const rows = data.table.rows;
+                
+                if (!rows || rows.length <= 1) {
+                    throw new Error("No products found in the sheet. Ensure you have data filled out below row 1.");
+                }
+
                 let html = '';
+                let count = 0;
                 
                 for(let i = 1; i < rows.length; i++) {
                     const row = rows[i];
-                    if (!row || !row.c) continue; // Safety check
+                    if (!row || !row.c) continue; // Skip completely empty rows
                     
-                    const img = (row.c[0] && row.c[0].v) ? row.c[0].v : 'https://placehold.co/800/f8f9fa/109B74?text=Product';
-                    const name = (row.c[1] && row.c[1].v) ? row.c[1].v : 'Product';
-                    const desc = (row.c[2] && row.c[2].v) ? row.c[2].v : '';
-                    const priceFormatted = (row.c[3] && row.c[3].v) ? row.c[3].v : '';
+                    // Safely extract data from columns A(0) to D(3)
+                    const img = getCell(row, 0) || 'https://placehold.co/800/f8f9fa/109B74?text=Product';
+                    const name = getCell(row, 1) || 'Unnamed Product';
+                    const desc = getCell(row, 2) || '';
+                    const priceFormatted = getCell(row, 3) || '$0.00';
                     const safePrice = parseFloat(String(priceFormatted).replace(/[^0-9.-]+/g,"")) || 0;
 
                     html += `
                     <div class="product-card rounded-2xl p-4 flex flex-col reveal active">
-                        <div class="img-wrapper rounded-xl mb-6">
-                            <img src="${img}" alt="${name}">
+                        <div class="img-wrapper rounded-xl mb-6 bg-gray-50 aspect-square flex items-center justify-center p-4">
+                            <img src="${img}" alt="${name}" class="w-full h-full object-contain mix-blend-multiply">
                         </div>
                         <h3 class="font-display text-xl font-semibold mb-1">${name}</h3>
                         <p class="font-sans text-sm text-gray-500 mb-6 flex-1">${desc}</p>
@@ -257,9 +276,22 @@
                             <button onclick="addToCart('${i}', '${name.replace(/'/g, "\\'")}', ${safePrice}, '${img}')" class="bg-gray-900 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full hover:bg-brand-green transition-colors">${translations[currentLang].btn_cart}</button>
                         </div>
                     </div>`;
+                    count++;
                 }
+                
+                if (count === 0) {
+                    throw new Error("No valid products found in rows. Check your columns.");
+                }
+                
                 container.innerHTML = html;
-            } catch (e) { container.innerHTML = '<div class="col-span-full text-center text-red-400 py-10">Failed to load store inventory.</div>'; }
+            } catch (e) { 
+                console.error("Fetch Error:", e);
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-20 bg-red-50 rounded-2xl border border-red-100">
+                        <div class="text-red-500 font-display text-xl font-semibold mb-2">Connection Error</div>
+                        <div class="text-red-400 font-sans max-w-md mx-auto">${e.message}</div>
+                    </div>`; 
+            }
         }
 
         /* --- Cart Logic --- */
