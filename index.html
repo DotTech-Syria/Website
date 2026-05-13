@@ -408,15 +408,28 @@
         }
 
         /* --- Fetch Data --- */
-        function getCell(row, index) { return (row.c[index] && row.c[index].v) ? row.c[index].v : ''; }
+        function getCell(row, index) { 
+            if (!row || !row.c || !row.c[index]) return '';
+            return row.c[index].v !== null && row.c[index].v !== undefined ? row.c[index].v : ''; 
+        }
 
         async function fetchProducts() {
             const container = document.getElementById('products-preview-container');
             try {
                 const res = await fetch(`https://docs.google.com/spreadsheets/d/1onrTRPtJVMCVRTRI0zVm5lv_ra1PCZAnXHLpjFslMQs/gviz/tq?tqx=out:json`);
                 const text = await res.text();
-                const data = JSON.parse(text.substring(text.indexOf("({") + 1, text.lastIndexOf("})") + 1));
+                
+                // If it returns HTML instead of JSON, the sheet is private
+                if (text.trim().startsWith('<')) {
+                    throw new Error("Google Sheet is private. Please change sharing to 'Anyone with the link'.");
+                }
+
+                const jsonString = text.substring(text.indexOf("({") + 1, text.lastIndexOf("})") + 1);
+                const data = JSON.parse(jsonString);
                 const rows = data.table.rows;
+                
+                if (!rows || rows.length <= 1) throw new Error("Google Sheet is empty or missing data rows.");
+
                 let html = '';
                 let count = 0;
                 
@@ -427,25 +440,29 @@
                     const img = getCell(row, 0) || 'https://placehold.co/800/f8f9fa/109B74?text=Product';
                     const name = getCell(row, 1) || 'Product';
                     const desc = getCell(row, 2) || '';
-                    const priceFormatted = getCell(row, 3) || '';
+                    const priceFormatted = getCell(row, 3) || '$0.00';
                     const safePrice = parseFloat(String(priceFormatted).replace(/[^0-9.-]+/g,"")) || 0;
 
                     html += `
                     <div class="product-card rounded-2xl p-4 flex flex-col reveal active" style="transition-delay: ${count * 100}ms">
-                        <div class="img-wrapper rounded-xl bg-gray-50 aspect-square mb-6">
-                            <img src="${img}" alt="${name}" class="w-full h-full object-cover mix-blend-multiply">
+                        <div class="img-wrapper rounded-xl bg-gray-50 aspect-square mb-6 flex items-center justify-center p-4">
+                            <img src="${img}" alt="${name}" class="w-full h-full object-contain mix-blend-multiply">
                         </div>
                         <h3 class="font-display text-xl font-semibold mb-1">${name}</h3>
                         <p class="font-sans text-sm text-gray-400 mb-4 line-clamp-2">${desc}</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <span class="font-sans font-medium text-lg">${priceFormatted}</span>
+                        <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
+                            <span class="font-sans font-medium text-lg text-brand-teal">${priceFormatted}</span>
                             <button onclick="addToCart('${i}', '${name.replace(/'/g, "\\'")}', ${safePrice}, '${img}')" class="bg-gray-900 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full hover:bg-brand-green transition-colors">${translations[currentLang].btn_cart}</button>
                         </div>
                     </div>`;
                     count++;
                 }
+                if (count === 0) throw new Error("No valid products found in rows.");
                 container.innerHTML = html;
-            } catch (e) { container.innerHTML = '<div class="col-span-4 text-center text-red-400">Failed to load products.</div>'; }
+            } catch (e) { 
+                console.error("Products Fetch Error:", e);
+                container.innerHTML = `<div class="col-span-4 text-center py-10 bg-red-50 rounded-2xl border border-red-100"><div class="text-red-500 font-sans font-medium mb-2">Failed to load products.</div><div class="text-red-400 font-sans text-sm">Error: ${e.message}</div></div>`; 
+            }
         }
 
         let articleDataRaw = [];
@@ -454,8 +471,15 @@
             try {
                 const res = await fetch(`https://docs.google.com/spreadsheets/d/1dq4Z2CSUX4lPWEMCw8WTpNbkzN4SBt3B7ON5nqPemXM/gviz/tq?tqx=out:json`);
                 const text = await res.text();
-                const data = JSON.parse(text.substring(text.indexOf("({") + 1, text.lastIndexOf("})") + 1));
+                
+                if (text.trim().startsWith('<')) throw new Error("Articles Sheet is private. Please change sharing to 'Anyone with the link'.");
+
+                const jsonString = text.substring(text.indexOf("({") + 1, text.lastIndexOf("})") + 1);
+                const data = JSON.parse(jsonString);
                 const rows = data.table.rows;
+                
+                if (!rows || rows.length <= 1) throw new Error("No articles found in sheet.");
+
                 articleDataRaw = [];
                 let html = '';
                 
@@ -487,7 +511,10 @@
                     </div>`;
                 }
                 container.innerHTML = html;
-            } catch (e) { container.innerHTML = '<div class="col-span-3 text-center text-red-400">Failed to load insights.</div>'; }
+            } catch (e) { 
+                console.error("Articles Fetch Error:", e);
+                container.innerHTML = `<div class="col-span-3 text-center py-10 bg-red-50 rounded-2xl border border-red-100"><div class="text-red-500 font-sans font-medium mb-2">Failed to load articles.</div><div class="text-red-400 font-sans text-sm">Error: ${e.message}</div></div>`; 
+            }
         }
 
         /* --- Modals & Cart --- */
