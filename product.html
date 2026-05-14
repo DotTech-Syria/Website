@@ -130,11 +130,24 @@
         const urlParams = new URLSearchParams(window.location.search);
         const currentProductId = urlParams.get('id');
 
-        let currentProductData = null;
+                let currentProductData = null;
         let selectedRating = 0;
         let currentLang = localStorage.getItem('dottech_lang') || 'en';
         let currentCurrency = localStorage.getItem('dottech_currency') || 'USD';
-        const EXCHANGE_RATE = 15000;
+        window.exchangeRate = 15000;
+
+        // Fetch Global Settings (Exchange Rate)
+        getDoc(doc(db, 'artifacts', appId, 'settings', 'global')).then(snap => {
+            if(snap.exists() && snap.data().exchangeRate) {
+                window.exchangeRate = snap.data().exchangeRate;
+                if(currentCurrency === 'SYP' && currentProductData) {
+                    document.getElementById('p-price').innerText = formatPrice(currentProductData.baseUsdPriceStr);
+                    if(currentProductData.baseUsdOldPriceStr) {
+                        document.getElementById('p-old-price').innerText = formatPrice(currentProductData.baseUsdOldPriceStr);
+                    }
+                }
+            }
+        });
 
         document.documentElement.lang = currentLang; document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
         document.getElementById('nav-currency').innerText = currentCurrency;
@@ -143,9 +156,9 @@
             if(!usdPriceStr) return '';
             const usdNum = parseFloat(usdPriceStr.replace(/[^0-9.-]+/g,""));
             if(isNaN(usdNum)) return usdPriceStr;
-            return currentCurrency === 'SYP' ? (usdNum * EXCHANGE_RATE).toLocaleString() + ' ل.س' : '$' + usdNum.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            return currentCurrency === 'SYP' ? (usdNum * window.exchangeRate).toLocaleString() + ' ل.س' : '$' + usdNum.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
-
+        
         /* --- CSV Parser & Fetch --- */
         function parseCSV(str) {
             const arr = []; let quote = false; let row = 0, col = 0;

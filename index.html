@@ -427,6 +427,21 @@
         window.db = getFirestore(app);
         const appId = 'dottech-store';
 
+        // Fetch Global Settings (Exchange Rate)
+        getDoc(doc(window.db, 'artifacts', appId, 'settings', 'global')).then(snap => {
+            if(snap.exists() && snap.data().exchangeRate) {
+                window.exchangeRate = snap.data().exchangeRate;
+                if(window.currentCurrency === 'SYP') {
+                    document.querySelectorAll('.currency-display').forEach(el => { 
+                        const usd = parseFloat(el.dataset.usd);
+                        if(!isNaN(usd)) el.textContent = `${(usd * window.exchangeRate).toLocaleString()} SYP`;
+                    });
+                    if(typeof renderCart === 'function') renderCart();
+                }
+            }
+        }).catch(e => console.log("Exchange rate ready."));
+
+
         window.dbAPI = {
             syncCart: async (cartItems) => {
                 if(!window.auth.currentUser) return;
