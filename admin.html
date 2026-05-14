@@ -5,59 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DotTech | Admin Dashboard</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { brand: { green: '#109B74', blue: '#257EA6' } }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'] } } } }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { brand: { green: '#109B74', teal: '#1B8A98', blue: '#257EA6' } },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], arabic: ['Tajawal', 'sans-serif'] }
+                }
+            }
+        }
     </script>
+
     <style>
-        body { background-color: #f3f4f6; color: #111827; }
-        .glass-panel { background: white; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        body { background-color: #f8fafc; color: #0f172a; transition: background-color 0.3s ease; }
+        .dark body { background-color: #0b0f19; color: #e2e8f0; }
+        html[dir="rtl"] body { font-family: 'Tajawal', sans-serif !important; }
+        
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(0, 0, 0, 0.05); }
+        .dark .glass-panel { background: rgba(15, 23, 42, 0.6); border-color: rgba(255, 255, 255, 0.05); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 155, 116, 0.3); border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #109B74; }
     </style>
 </head>
-<body class="min-h-screen pt-20 pb-12">
+<body class="font-sans antialiased h-screen flex flex-col overflow-hidden">
 
-    <nav class="fixed w-full top-0 z-50 bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <span class="font-display font-bold text-xl text-gray-900">DotTech <span class="text-brand-green">Admin</span></span>
+    <!-- Top Navigation -->
+    <nav class="glass-panel z-50 px-6 py-4 flex justify-between items-center shadow-sm shrink-0">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-blue rounded-xl flex items-center justify-center shadow-lg text-white font-display font-bold text-xl">D</div>
+            <div>
+                <h1 class="font-display font-bold text-xl leading-none">DotTech Admin</h1>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Control Center</p>
             </div>
-            <a href="index.html" class="text-sm font-medium text-gray-500 hover:text-gray-900">Back to Website</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                <svg id="theme-icon" class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+            <button id="logout-btn" class="bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-all">Logout</button>
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-6">
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
         
-        <!-- Auth Check Warning -->
-        <div id="auth-warning" class="text-center py-20">
-            <h2 class="font-display text-3xl font-bold mb-4">Admin Access Required</h2>
-            <p class="text-gray-500 mb-6">Please sign in with your administrator account to view orders.</p>
-            <a href="auth.html" class="bg-gray-900 text-white px-6 py-3 rounded-xl font-medium">Go to Sign In</a>
-        </div>
+        <!-- Sidebar -->
+        <aside class="w-64 glass-panel border-r border-gray-200 dark:border-gray-800 flex flex-col gap-2 p-4 shrink-0 z-40">
+            <button onclick="switchTab('orders')" id="tab-orders" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all bg-brand-green/10 text-brand-green">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                Orders
+            </button>
+            <button onclick="switchTab('promos')" id="tab-promos" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                Promo Codes
+            </button>
+        </aside>
 
-        <!-- Dashboard Content -->
-        <div id="dashboard-content" class="hidden">
-            <div class="flex justify-between items-end mb-8">
-                <div>
-                    <h1 class="font-display text-4xl font-bold text-gray-900">Incoming Orders</h1>
-                    <p class="text-gray-500 mt-2">Manage customer checkouts and contact them for delivery.</p>
+        <!-- Content Area -->
+        <main class="flex-1 p-6 overflow-y-auto custom-scrollbar relative">
+            
+            <!-- Auth Gate Screen -->
+            <div id="auth-gate" class="absolute inset-0 z-50 glass-panel flex flex-col items-center justify-center hidden">
+                <div class="w-12 h-12 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin mb-4"></div>
+                <h2 class="text-xl font-display font-bold">Verifying Access...</h2>
+            </div>
+
+            <!-- Orders Section -->
+            <section id="section-orders" class="max-w-6xl mx-auto space-y-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-display font-bold">Recent Orders</h2>
+                    <button onclick="window.adminAPI.loadOrders()" class="text-sm font-medium text-brand-green hover:underline">Refresh List</button>
                 </div>
-                <button onclick="window.adminAPI.loadOrders()" class="flex items-center gap-2 text-sm font-medium text-brand-green hover:underline">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    Refresh List
-                </button>
-            </div>
+                <div id="orders-container" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <p class="text-gray-500">Loading orders...</p>
+                </div>
+            </section>
 
-            <div id="orders-grid" class="grid gap-6">
-                <div class="text-center text-gray-400 py-10">Loading orders...</div>
-            </div>
-        </div>
+            <!-- Promos Section -->
+            <section id="section-promos" class="max-w-4xl mx-auto space-y-6 hidden">
+                <h2 class="text-2xl font-display font-bold mb-6">Manage Promo Codes</h2>
+                
+                <!-- Create Promo Form -->
+                <div class="glass-panel p-6 rounded-2xl shadow-sm mb-8">
+                    <h3 class="text-lg font-semibold mb-4">Create New Code</h3>
+                    <div class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-1 w-full">
+                            <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Code Name</label>
+                            <input type="text" id="new-promo-code" placeholder="e.g. DOT20" class="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2.5 outline-none focus:border-brand-green uppercase font-bold text-gray-900 dark:text-white">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Discount %</label>
+                            <input type="number" id="new-promo-discount" placeholder="e.g. 20" class="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2.5 outline-none focus:border-brand-green text-gray-900 dark:text-white">
+                        </div>
+                        <button onclick="window.adminAPI.createPromo()" class="w-full md:w-auto bg-brand-green text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg transition-all">Add Code</button>
+                    </div>
+                </div>
+
+                <!-- Active Promos List -->
+                <div class="glass-panel rounded-2xl overflow-hidden shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+                                <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Promo Code</th>
+                                <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Discount</th>
+                                <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="promos-container" class="divide-y divide-gray-200 dark:divide-gray-800">
+                            <tr><td colspan="3" class="p-6 text-center text-gray-500">Loading codes...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
     </div>
 
+    <!-- Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
@@ -65,113 +141,196 @@
             projectId: "dottech-website",
             storageBucket: "dottech-website.firebasestorage.app",
             messagingSenderId: "1081481170332",
-            appId: "1:1081481170332:web:189c741dd1b21250b48c59"
+            appId: "1:1081481170332:web:189c741dd1b21250b48c59",
+            measurementId: "G-FL0H9KDFJ2"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const appId = 'dottech-store';
+        const adminEmail = 'dottech.syria@gmail.com';
 
-        // Set your admin email here
-        const ADMIN_EMAIL = "dottech.syria@gmail.com";
-
-        window.adminAPI = {
-            loadOrders: async () => {
-                const grid = document.getElementById('orders-grid');
-                grid.innerHTML = '<div class="text-center text-gray-400 py-10">Fetching secure data...</div>';
-                
-                try {
-                    const q = query(collection(db, 'artifacts', appId, 'orders'), orderBy('date', 'desc'));
-                    const querySnapshot = await getDocs(q);
-                    
-                    if(querySnapshot.empty) {
-                        grid.innerHTML = '<div class="glass-panel p-10 text-center text-gray-500">No orders found.</div>';
-                        return;
-                    }
-
-                    let html = '';
-                    querySnapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const orderId = doc.id;
-                        const date = new Date(data.date).toLocaleString();
-                        const isCompleted = data.status === 'completed';
-                        
-                        let itemsHtml = data.items.map(i => `<div class="flex justify-between text-sm py-1 border-b border-gray-50 last:border-0"><span class="text-gray-700">${i.qty}x ${i.name}</span><span class="font-medium">${i.price}</span></div>`).join('');
-                        
-                        // Clean phone number for WhatsApp URL
-                        const waPhone = (data.customerPhone || '').replace(/[^0-9+]/g, '');
-
-                        html += `
-                        <div class="glass-panel p-6 ${isCompleted ? 'opacity-60' : ''}" id="order-${orderId}">
-                            <div class="flex flex-col md:flex-row justify-between gap-6">
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-3 mb-2">
-                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${isCompleted ? 'bg-gray-100 text-gray-500' : 'bg-brand-green/10 text-brand-green'}">${isCompleted ? 'Completed' : 'New Order'}</span>
-                                        <span class="text-xs text-gray-400 font-mono">${orderId}</span>
-                                    </div>
-                                    <h3 class="font-display text-xl font-bold text-gray-900">${data.customerName}</h3>
-                                    <p class="text-sm text-gray-500 mb-4">${date}</p>
-                                    
-                                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Order Items</div>
-                                        ${itemsHtml}
-                                        <div class="flex justify-between mt-3 pt-3 border-t border-gray-200 font-bold">
-                                            <span>Total</span><span class="text-brand-green">$${data.total.toLocaleString()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="md:w-64 flex flex-col gap-3 justify-center border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
-                                    <div class="mb-2">
-                                        <div class="text-xs text-gray-500 mb-1">Contact</div>
-                                        <div class="font-medium text-sm break-all">${data.customerPhone}</div>
-                                        <div class="text-sm text-gray-500 break-all">${data.customerEmail}</div>
-                                    </div>
-                                    
-                                    <a href="https://wa.me/${waPhone}?text=Hello ${encodeURIComponent(data.customerName)}, we received your DotTech order!" target="_blank" class="w-full text-center bg-[#25D366] text-white px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                                        WhatsApp Message
-                                    </a>
-                                    <a href="mailto:${data.customerEmail}?subject=Your DotTech Order" class="w-full text-center bg-gray-900 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">
-                                        Send Email
-                                    </a>
-                                    
-                                    ${!isCompleted ? `<button onclick="window.adminAPI.markCompleted('${orderId}')" class="w-full text-center mt-2 border border-brand-green text-brand-green px-4 py-2 rounded-lg font-medium text-sm hover:bg-brand-green hover:text-white transition-colors">Mark Completed</button>` : ''}
-                                </div>
-                            </div>
-                        </div>`;
-                    });
-                    grid.innerHTML = html;
-                } catch(e) {
-                    grid.innerHTML = '<div class="text-red-500 text-center py-10">Error loading orders. You may not have database permissions.</div>';
-                    console.error(e);
-                }
-            },
-
-            markCompleted: async (orderId) => {
-                if(!confirm("Mark this order as completed and delivered?")) return;
-                try {
-                    await updateDoc(doc(db, 'artifacts', appId, 'orders', orderId), { status: 'completed' });
-                    window.adminAPI.loadOrders();
-                } catch(e) {
-                    alert("Error updating order.");
-                }
+        // UI Interactions
+        window.switchTab = (tab) => {
+            document.getElementById('section-orders').classList.add('hidden');
+            document.getElementById('section-promos').classList.add('hidden');
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            
+            const btnOrders = document.getElementById('tab-orders');
+            const btnPromos = document.getElementById('tab-promos');
+            const activeClasses = ['bg-brand-green/10', 'text-brand-green'];
+            const inactiveClasses = ['text-gray-600', 'hover:bg-gray-100', 'dark:text-gray-400', 'dark:hover:bg-gray-800'];
+            
+            if(tab === 'orders') {
+                btnOrders.classList.remove(...inactiveClasses); btnOrders.classList.add(...activeClasses);
+                btnPromos.classList.remove(...activeClasses); btnPromos.classList.add(...inactiveClasses);
+                window.adminAPI.loadOrders();
+            } else {
+                btnPromos.classList.remove(...inactiveClasses); btnPromos.classList.add(...activeClasses);
+                btnOrders.classList.remove(...activeClasses); btnOrders.classList.add(...inactiveClasses);
+                window.adminAPI.loadPromos();
             }
         };
 
+        const formatDate = (isoString) => {
+            const d = new Date(isoString);
+            return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        };
+
+        // Admin API Functions
+        window.adminAPI = {
+            loadOrders: async () => {
+                const container = document.getElementById('orders-container');
+                try {
+                    const q = query(collection(db, 'artifacts', appId, 'orders'), orderBy('date', 'desc'));
+                    const snap = await getDocs(q);
+                    if(snap.empty) { container.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10">No orders found.</p>'; return; }
+                    
+                    let html = '';
+                    snap.forEach(docSnap => {
+                        const order = docSnap.data();
+                        const id = docSnap.id;
+                        
+                        let statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+                        if(order.status === 'processing') statusColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+                        if(order.status === 'shipped') statusColor = 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
+                        if(order.status === 'completed') statusColor = 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+                        if(order.status === 'cancelled') statusColor = 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+
+                        let itemsHtml = order.items.map(i => `<div class="flex justify-between text-sm py-1"><span class="text-gray-600 dark:text-gray-300 truncate pe-4">${i.qty}x ${i.name}</span><span class="font-medium font-display">${i.price}</span></div>`).join('');
+                        
+                        // WhatsApp Link for Syrian/International numbers
+                        let phoneClean = order.customerPhone.replace(/[^0-9+]/g, '');
+                        if(phoneClean.startsWith('09')) phoneClean = '+963' + phoneClean.substring(1);
+
+                        html += `
+                        <div class="glass-panel p-5 rounded-2xl flex flex-col">
+                            <div class="flex justify-between items-start border-b border-gray-100 dark:border-gray-800 pb-3 mb-3">
+                                <div>
+                                    <h3 class="font-bold text-lg leading-tight">${order.customerName || 'Guest'}</h3>
+                                    <div class="text-xs text-gray-500 mt-1">${formatDate(order.date)} • ID: ${id.substring(0,6).toUpperCase()}</div>
+                                </div>
+                                <span class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-md ${statusColor}">${order.status}</span>
+                            </div>
+                            
+                            <div class="flex-1 mb-4 space-y-1 bg-gray-50 dark:bg-gray-800/30 p-3 rounded-xl border border-gray-100 dark:border-gray-800">${itemsHtml}</div>
+                            
+                            <div class="flex justify-between items-center font-display font-bold text-lg mb-4">
+                                <span>Total:</span>
+                                <span class="text-brand-green">${order.totalCurrency || 'USD'} ${order.total.toLocaleString()}</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 mb-3">
+                                <a href="https://wa.me/${phoneClean}" target="_blank" class="text-center py-2 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white rounded-lg text-sm font-bold transition-colors">WhatsApp</a>
+                                <a href="mailto:${order.customerEmail}" class="text-center py-2 bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg text-sm font-bold transition-colors">Email</a>
+                            </div>
+
+                            <select onchange="window.adminAPI.updateStatus('${id}', this.value)" class="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:border-brand-green outline-none dark:bg-gray-900">
+                                <option value="" disabled selected>Update Status...</option>
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>`;
+                    });
+                    container.innerHTML = html;
+                } catch(e) { console.error(e); container.innerHTML = '<p class="text-red-500">Error loading orders.</p>'; }
+            },
+
+            updateStatus: async (orderId, newStatus) => {
+                if(!newStatus) return;
+                try {
+                    await updateDoc(doc(db, 'artifacts', appId, 'orders', orderId), { status: newStatus });
+                    window.adminAPI.loadOrders();
+                } catch(e) { alert("Error updating status."); console.error(e); }
+            },
+
+            loadPromos: async () => {
+                const container = document.getElementById('promos-container');
+                try {
+                    const snap = await getDocs(collection(db, 'artifacts', appId, 'promos'));
+                    if(snap.empty) { container.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-gray-500">No promo codes active.</td></tr>'; return; }
+                    
+                    let html = '';
+                    snap.forEach(docSnap => {
+                        const p = docSnap.data();
+                        html += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors group">
+                            <td class="px-6 py-4 font-bold font-display tracking-wider text-gray-900 dark:text-white">${p.code}</td>
+                            <td class="px-6 py-4 text-brand-green font-bold">${p.discount}% OFF</td>
+                            <td class="px-6 py-4 text-right">
+                                <button onclick="window.adminAPI.deletePromo('${docSnap.id}')" class="text-red-400 hover:text-red-600 font-medium text-sm px-3 py-1 bg-red-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">Delete</button>
+                            </td>
+                        </tr>`;
+                    });
+                    container.innerHTML = html;
+                } catch(e) { console.error(e); container.innerHTML = '<tr><td colspan="3" class="text-red-500 p-4">Error loading promos.</td></tr>'; }
+            },
+
+            createPromo: async () => {
+                const codeInput = document.getElementById('new-promo-code');
+                const discInput = document.getElementById('new-promo-discount');
+                const code = codeInput.value.trim().toUpperCase();
+                const discount = parseInt(discInput.value);
+
+                if(!code || isNaN(discount) || discount <= 0 || discount > 100) return alert("Please enter a valid code and percentage (1-100).");
+
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'promos', code), { code: code, discount: discount, active: true });
+                    codeInput.value = ''; discInput.value = '';
+                    window.adminAPI.loadPromos();
+                } catch(e) { alert("Error creating promo code."); console.error(e); }
+            },
+
+            deletePromo: async (promoId) => {
+                if(!confirm(`Are you sure you want to delete promo code: ${promoId}?`)) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'promos', promoId));
+                    window.adminAPI.loadPromos();
+                } catch(e) { alert("Error deleting promo."); console.error(e); }
+            }
+        };
+
+        // Authentication Gatekeeper
+        const gate = document.getElementById('auth-gate');
+        gate.classList.remove('hidden');
+
         onAuthStateChanged(auth, (user) => {
-            const warning = document.getElementById('auth-warning');
-            const content = document.getElementById('dashboard-content');
-            
-            if (user && user.email === ADMIN_EMAIL) {
-                warning.classList.add('hidden');
-                content.classList.remove('hidden');
-                window.adminAPI.loadOrders();
+            if (!user || user.email !== adminEmail) {
+                document.body.innerHTML = `
+                    <div class="h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-6 text-center">
+                        <div class="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h1 class="text-3xl font-display font-bold mb-2">Access Denied</h1>
+                        <p class="text-gray-400 mb-8 max-w-md">You do not have administrative privileges. Please log in with the admin account.</p>
+                        <button onclick="window.location.href='auth.html'" class="bg-brand-green text-gray-900 font-bold px-8 py-3 rounded-xl hover:bg-white transition-colors">Go to Login</button>
+                    </div>`;
             } else {
-                warning.classList.remove('hidden');
-                content.classList.add('hidden');
+                gate.classList.add('hidden');
+                window.adminAPI.loadOrders();
             }
         });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = 'index.html');
+        });
+
+        // Dark Mode Logic
+        window.toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('dottech_theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').innerHTML = isDark 
+                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>'
+                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+        };
+        if (localStorage.getItem('dottech_theme') === 'dark' || (!localStorage.getItem('dottech_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            toggleDarkMode();
+        }
     </script>
 </body>
 </html>
