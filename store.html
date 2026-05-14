@@ -471,23 +471,43 @@
             }
         }
 
-        window.applyPromo = function() {
-            const input = document.getElementById('promo-code-input').value.toUpperCase().trim();
-            const msg = document.getElementById('promo-message');
-            const validPromos = { 'DOT20': 0.20, 'WELCOME10': 0.10, 'SALE50': 0.50 };
+        window.applyPromoCode = async () => {
+    const inputEl = document.getElementById('promo-input');
+    if(!inputEl) return;
+    
+    // تنظيف النص وتكبير الأحرف ليتطابق تماماً مع قاعدة البيانات
+    const code = inputEl.value.trim().toUpperCase(); 
+    if(!code) return alert("الرجاء إدخال كود الخصم أولاً.");
 
-            if(validPromos[input]) {
-                window.currentPromoCode = input; window.currentDiscountRate = validPromos[input];
-                msg.textContent = `Promo Applied: ${window.currentDiscountRate * 100}% OFF!`;
-                msg.className = 'text-xs font-bold mt-2 block text-brand-green';
-            } else if(input === '') {
-                window.currentPromoCode = null; window.currentDiscountRate = 0; msg.classList.add('hidden');
-            } else {
-                window.currentPromoCode = null; window.currentDiscountRate = 0;
-                msg.textContent = 'Invalid Promo Code.'; msg.className = 'text-xs font-bold mt-2 block text-red-500';
-            }
+    const btn = document.getElementById('apply-promo-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "جاري التحقق...";
+    btn.disabled = true;
+
+    try {
+        // جلب دوال Firebase
+        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        
+        // البحث عن الكود في المسار الصحيح
+        const promoDoc = await getDoc(doc(window.db, 'artifacts', 'dottech-store', 'promos', code));
+        
+        if(promoDoc.exists() && promoDoc.data().active !== false) {
+            window.currentDiscount = promoDoc.data().discount;
+            alert(`تم تفعيل الكود بنجاح! حصلت على خصم ${window.currentDiscount}%`);
+            renderCart(); // إعادة رسم السلة لإظهار السعر الجديد
+        } else {
+            alert("Invalid Promo Code. الكود غير صحيح أو منتهي الصلاحية.");
+            window.currentDiscount = 0;
             renderCart();
         }
+    } catch(error) {
+        console.error("Promo Error:", error);
+        alert("حدث خطأ أثناء التحقق. يرجى التأكد من اتصالك بالإنترنت وصلاحيات Firestore.");
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+};
 
         function addToCart(id, name, priceStr, img) {
             const existing = cart.find(i => i.id === id);
