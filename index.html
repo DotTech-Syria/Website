@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DotTech | The Future of Tech</title>
     
-    <!-- Next-Gen Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     
     <!-- Markdown Parser -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -32,159 +31,147 @@
             }
         }
     </script>
+
     <style>
-        .btn-elegant {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.5s ease;
-            z-index: 1;
-        }
+        :root { --bg-color: #ffffff; --text-main: #0a0a0a; }
+        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; -webkit-font-smoothing: antialiased; transition: background-color 0.3s, color 0.3s; }
         
-        .btn-elegant::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #109B74 0%, #257EA6 100%);
-            z-index: -1;
-            transition: opacity 0.5s ease;
-            opacity: 1;
-        }
+        /* Dark Mode Overrides */
+        html.dark body { background-color: #0b0f19; color: #e2e8f0; }
+        html.dark .glass-nav { background: rgba(15, 23, 42, 0.75) !important; border-bottom-color: rgba(255, 255, 255, 0.05) !important; }
+        html.dark .bg-white\/80 { background-color: rgba(15, 23, 42, 0.8) !important; }
+        html.dark .bg-\[\#FAFAFA\]\/90 { background-color: rgba(11, 15, 25, 0.9) !important; }
+        html.dark .bg-white { background-color: #111827 !important; border-color: rgba(255,255,255,0.08) !important; }
+        html.dark .bg-gray-50 { background-color: #1f2937 !important; border-color: rgba(255,255,255,0.05) !important; }
+        html.dark .text-gray-900 { color: #ffffff !important; }
+        html.dark .text-gray-800 { color: #f3f4f6 !important; }
+        html.dark .text-gray-500, html.dark .text-gray-600 { color: #9ca3af !important; }
+        html.dark .border-gray-100, html.dark .border-gray-200 { border-color: rgba(255,255,255,0.05) !important; }
         
+        /* Product Card Fixes for Dark Mode */
+        .product-card { background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); border-radius: 24px; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); }
+        html.dark .product-card { background: #111827; border-color: rgba(255, 255, 255, 0.05); }
+        .product-card:hover { transform: translateY(-6px); border-color: rgba(16, 155, 116, 0.3); }
+        
+        .product-img-wrapper { mix-blend-mode: multiply; }
+        html.dark .product-img-wrapper { mix-blend-mode: normal; background-color: #f8fafc; border-radius: 12px; padding: 10px; }
+
+        html[dir="rtl"] body, html[dir="rtl"] .font-display, html[dir="rtl"] .font-sans { font-family: 'Tajawal', sans-serif !important; }
+        ::selection { background-color: rgba(16, 155, 116, 0.2); color: #109B74; }
+
+        .text-gradient { background: linear-gradient(135deg, #109B74 0%, #257EA6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-nav { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
+        
+        .btn-elegant { position: relative; overflow: hidden; transition: all 0.5s ease; z-index: 1; }
+        .btn-elegant::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #109B74 0%, #257EA6 100%); z-index: -1; transition: opacity 0.5s ease; }
         .btn-elegant:hover::before { opacity: 0.8; }
 
-        html.dark body { background-color: #050505; color: #f3f4f6; }
-        html.dark .glass-nav { background: rgba(5, 5, 5, 0.85) !important; border-bottom-color: rgba(255, 255, 255, 0.05) !important; }
-        
-        html.dark .bg-white\/80 { background-color: rgba(10, 10, 10, 0.8) !important; }
-        html.dark .bg-white\/50 { background-color: rgba(10, 10, 10, 0.5) !important; border-color: rgba(255,255,255,0.1) !important; }
-        html.dark .bg-white\/90 { background-color: rgba(10, 10, 10, 0.9) !important; border-color: rgba(255,255,255,0.05) !important; }
-        html.dark .bg-\[\#FAFAFA\]\/90 { background-color: rgba(15, 15, 15, 0.9) !important; }
-        
-        html.dark .bg-white, html.dark #profile-modal-inner, html.dark #article-modal-inner, html.dark #user-dropdown, html.dark #mobile-menu, html.dark #cart-drawer { background-color: #0a0a0a !important; border-color: rgba(255,255,255,0.08) !important; }
-        html.dark .bg-gray-50 { background-color: #111111 !important; }
-        html.dark .bg-\[\#FAFAFA\] { background-color: #111111 !important; }
-        
-        html.dark .text-gray-900, html.dark .text-gray-800 { color: #ffffff !important; }
-        html.dark .text-gray-700 { color: #f4f4f5 !important; }
-        html.dark .text-gray-600, html.dark .text-gray-500 { color: #a1a1aa !important; }
-        html.dark .text-gray-400 { color: #888888 !important; }
-        
-        html.dark .border-gray-100, html.dark .border-gray-200, html.dark .border-gray-300 { border-color: rgba(255,255,255,0.08) !important; }
-        
-        html.dark input, html.dark select, html.dark textarea { background-color: #111111 !important; border-color: rgba(255,255,255,0.1) !important; color: #ffffff !important; }
-        html.dark input:focus, html.dark select:focus, html.dark textarea:focus { border-color: #109B74 !important; background-color: #151515 !important; }
-        
-        html.dark .product-card, html.dark .bento-card { background: #111111 !important; border-color: rgba(255, 255, 255, 0.05) !important; }
-        html.dark .product-card:hover, html.dark .bento-card:hover { border-color: rgba(16, 155, 116, 0.4) !important; background: #151515 !important; }
-        html.dark .product-img-wrapper, html.dark .bento-card .bg-gray-50 { background-color: #1a1a1a !important; }
-        html.dark .hover\:bg-gray-50:hover, html.dark .hover\:bg-gray-100:hover { background-color: #1a1a1a !important; }
-        
-        html.dark #cart-items-container .bg-white { background-color: #111111 !important; border-color: rgba(255,255,255,0.05) !important; }
-        
-        html.dark .markdown-body h1, html.dark .markdown-body h2, html.dark .markdown-body h3, html.dark .markdown-body strong { color: #ffffff !important; }
-        html.dark .markdown-body p, html.dark .markdown-body ul, html.dark .markdown-body ol { color: #a1a1aa !important; }
-        
-        html.dark .logo-img { filter: none !important; }
-
-        html.dark .mix-blend-multiply { mix-blend-mode: normal !important; }
-        html.dark .product-img-wrapper, html.dark .bento-card .bg-gray-50, html.dark #cart-items-container img { background-color: #f8f9fa !important; padding: 0.5rem; }
-
         #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -10; pointer-events: none; opacity: 0.5; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        
-        html.dark .service-row { border-color: rgba(255,255,255,0.08); }
-        html.dark .service-row:hover { border-color: #109B74; }
+        html.dark #canvas-container { opacity: 0.2; }
 
-        .reveal { opacity: 100; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 155, 116, 0.3); border-radius: 8px; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
+
+        /* Toast Animation */
+        .toast-enter { animation: slideIn 0.3s ease-out forwards; }
+        .toast-exit { animation: slideOut 0.3s ease-in forwards; }
+        @keyframes slideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
+        
+        /* Markdown Styles */
+        .markdown-body h2 { font-size: 1.5rem; font-weight: bold; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #111827; }
+        html.dark .markdown-body h2 { color: #f9fafb; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.7; }
+        .markdown-body ul { list-style-type: disc; padding-inline-start: 1.5rem; margin-bottom: 1rem; }
     </style>
 </head>
-<body class="bg-white text-gray-900 transition-colors duration-300">
+<body class="bg-[#FAFAFA] dark:bg-[#0b0f19]">
 
     <div id="canvas-container"></div>
 
     <nav class="fixed w-full top-0 z-50 glass-nav transition-all duration-300">
-        <div class="max-w-screen-2xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 group">
-                <img src="./logo.png" alt="DotTech Logo" class="h-7 sm:h-8 object-contain transition-transform group-hover:scale-105 logo-img" onerror="this.outerHTML='<span class=\'font-display font-bold text-2xl tracking-tighter text-gradient\'>DotTech.</span>'">
+                <img src="./logo.png" alt="DotTech Logo" class="h-7 sm:h-8 object-contain transition-transform group-hover:scale-105" onerror="this.outerHTML='<span class=\'font-display font-bold text-2xl tracking-tighter text-gradient\'>DotTech.</span>'">
             </a>
             
             <div class="hidden md:flex items-center gap-8 lg:gap-10 font-sans text-sm font-medium tracking-wide">
-                <a href="#about" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_story">Our Story</a>
-                <a href="#services" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_expertise">Expertise</a>
-                <a href="#vision" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_future">Future</a>
-                <a href="#contact" class="text-gray-900 hover:text-brand-green transition-colors" data-i18n="nav_contact">Initiate Contact</a>
+                <a href="#about" class="text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors" data-i18n="nav_story">Our Story</a>
+                <a href="#services" class="text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors" data-i18n="nav_expertise">Expertise</a>
+                <a href="store.html" class="text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors" data-i18n="nav_store">Store</a>
+                <a href="#vision" class="text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors" data-i18n="nav_future">Future</a>
+                <a href="#contact" class="text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors" data-i18n="nav_contact">Initiate Contact</a>
             </div>
 
-            <div class="flex items-center gap-5">
-                <button onclick="toggleTheme()" id="theme-toggle-btn" class="text-gray-500 hover:text-brand-green transition-colors p-1"></button>
-
-                <!-- Added Currency Toggle to Match Store -->
-                <button onclick="toggleCurrency()" id="curr-toggle-btn" class="font-sans text-xs font-bold tracking-widest px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-all text-gray-600 dark:text-gray-400 hidden md:block">USD</button>
-
-                <button onclick="toggleLanguage()" id="lang-toggle-btn" class="font-sans text-xs font-bold tracking-widest uppercase border border-gray-300 dark:border-gray-700 px-3 py-1 rounded-full hover:border-brand-green hover:text-brand-green transition-all">AR</button>
-                <a href="store.html" class="hidden md:block text-sm font-medium tracking-wide hover:text-brand-green transition-colors" data-i18n="nav_store">Store</a>
+            <div class="flex items-center gap-3 sm:gap-5">
+                <button onclick="toggleCurrency()" id="currency-toggle-btn" class="font-sans text-xs font-bold tracking-widest uppercase border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-full hover:border-brand-green hover:text-brand-green transition-all bg-white dark:bg-gray-800 shadow-sm text-gray-900 dark:text-white">USD</button>
+                <button onclick="toggleLanguage()" id="lang-toggle-btn" class="font-sans text-xs font-bold tracking-widest uppercase border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-full hover:border-brand-green hover:text-brand-green transition-all bg-white dark:bg-gray-800 shadow-sm text-gray-900 dark:text-white">AR</button>
+                <button onclick="toggleDarkMode()" class="text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
                 
-                <button onclick="toggleCart()" class="relative text-gray-900 hover:text-brand-green transition-colors group ml-2">
-                    <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    <span id="cart-badge" class="absolute -top-1.5 -right-2 bg-brand-green text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">0</span>
+                <button onclick="toggleCart()" class="relative text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors group ms-1 sm:ms-2">
+                    <svg class="w-6 h-6 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span id="cart-badge" class="absolute -top-1.5 -end-2 bg-brand-green text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">0</span>
                 </button>
 
-                <div class="relative pl-4 ml-2 border-l border-gray-200 dark:border-gray-700" id="auth-wrapper">
-                    <button id="auth-login-btn" onclick="window.location.href='auth.html'" class="text-gray-900 hover:text-brand-green transition-all hover:scale-110 flex items-center">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <div class="relative ps-3 sm:ps-4 ms-1 sm:ms-2 border-s border-gray-200 dark:border-gray-700">
+                    <button id="auth-login-btn" onclick="window.location.href='auth.html'" class="text-gray-900 dark:text-gray-300 hover:text-brand-green transition-all hover:scale-110 flex items-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     </button>
                     <div id="user-profile-menu" class="hidden items-center cursor-pointer group" onclick="toggleUserDropdown()">
-                        <img id="user-avatar" src="" class="w-7 h-7 rounded-full border border-gray-200 dark:border-gray-700 object-cover" alt="User">
-                        <div id="user-dropdown" class="absolute top-10 ltr:right-0 rtl:left-0 bg-white border border-gray-100 rounded-xl shadow-xl py-2 w-48 hidden opacity-0 transition-opacity">
-                            <a href="profile.html" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-green transition-colors border-b border-gray-50 dark:border-gray-800">My Profile</a>
-                            <button onclick="window.authAPI.logout()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Sign Out</button>
+                        <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 object-cover shadow-sm" alt="User">
+                        <div id="user-dropdown" class="absolute top-12 end-0 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-xl py-2 w-48 hidden z-50 transition-all">
+                            <a href="profile.html" class="block w-full text-start px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-brand-green transition-colors">My Profile</a>
+                            <button onclick="window.authAPI.logout()" class="w-full text-start px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Sign Out</button>
                         </div>
                     </div>
                 </div>
 
-                <button onclick="toggleMobileMenu()" class="lg:hidden text-gray-900 hover:text-brand-green transition-colors pl-2">
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-900 dark:text-gray-300 hover:text-brand-green transition-colors ps-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
             </div>
         </div>
     </nav>
-    <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-md z-[100] transform translate-x-full rtl:-translate-x-full transition-transform duration-300 flex flex-col hidden dark:bg-[#050505]/95">
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md z-[100] transform translate-x-full rtl:-translate-x-full transition-transform duration-300 flex flex-col hidden">
         <div class="p-6 flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
             <span class="font-display font-bold text-2xl text-gradient">Menu</span>
-            <button onclick="toggleMobileMenu()" class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            <button onclick="toggleMobileMenu()" class="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
         <div class="flex flex-col p-6 gap-6 font-display text-xl">
-            <a href="index.html#about" onclick="toggleMobileMenu()" class="text-gray-900 hover:text-brand-green" data-i18n="nav_story">Our Story</a>
-            <a href="index.html#services" onclick="toggleMobileMenu()" class="text-gray-900 hover:text-brand-green" data-i18n="nav_expertise">Expertise</a>
-            <a href="store.html" onclick="toggleMobileMenu()" class="text-brand-green" data-i18n="nav_store">Store</a>
-            <a href="index.html#vision" onclick="toggleMobileMenu()" class="text-gray-900 hover:text-brand-green" data-i18n="nav_future">Future</a>
-            <a href="index.html#contact" onclick="toggleMobileMenu()" class="text-gray-900 hover:text-brand-green" data-i18n="nav_contact">Initiate Contact</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="text-gray-900 dark:text-gray-300 hover:text-brand-green" data-i18n="nav_story">Our Story</a>
+            <a href="#services" onclick="toggleMobileMenu()" class="text-gray-900 dark:text-gray-300 hover:text-brand-green" data-i18n="nav_expertise">Expertise</a>
+            <a href="store.html" onclick="toggleMobileMenu()" class="text-gray-900 dark:text-gray-300 hover:text-brand-green" data-i18n="nav_store">Store</a>
+            <a href="#vision" onclick="toggleMobileMenu()" class="text-gray-900 dark:text-gray-300 hover:text-brand-green" data-i18n="nav_future">Future</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="text-gray-900 dark:text-gray-300 hover:text-brand-green" data-i18n="nav_contact">Initiate Contact</a>
         </div>
     </div>
 
-    <!-- Hero Section -->
-    <section class="relative pt-32 md:pt-40 lg:pt-56 pb-20 lg:pb-32">
+    <section class="relative min-h-screen flex items-center pt-24 pb-12">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12 w-full">
             <div class="max-w-4xl reveal">
                 <p class="font-sans text-brand-teal tracking-[0.2em] text-sm font-medium uppercase mb-6" data-i18n="hero_est">Est. March 2025</p>
-                <h1 class="font-display text-5xl md:text-7xl lg:text-[7.5rem] font-semibold leading-[1.1] md:leading-[0.9] tracking-tighter text-gray-900 mb-8" data-i18n="hero_title">
+                <h1 class="font-display text-5xl md:text-7xl lg:text-[7.5rem] font-semibold leading-[1.1] md:leading-[0.9] tracking-tighter text-gray-900 dark:text-white mb-8" data-i18n="hero_title">
                     Tech in <br>
                     <span class="text-gradient italic font-light">Human</span> Service.
                 </h1>
-                <p class="font-sans text-lg md:text-xl text-gray-500 max-w-xl font-light leading-relaxed mb-12" data-i18n="hero_desc">
+                <p class="font-sans text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-xl font-light leading-relaxed mb-12" data-i18n="hero_desc">
                     A starting point towards a better, simpler, and more aware tech experience. We simplify the complex.
                 </p>
                 <div class="flex gap-4 flex-wrap">
                     <a href="#services" class="btn-elegant text-white px-8 md:px-10 py-3 md:py-4 rounded-full font-sans text-xs md:text-sm tracking-widest uppercase transition-transform hover:scale-105 inline-block shadow-2xl shadow-brand-green/20" data-i18n="hero_btn">
                         Discover Solutions
                     </a>
-                    <a href="store.html" class="px-8 md:px-10 py-3 md:py-4 rounded-full font-sans text-xs md:text-sm tracking-widest uppercase transition-all inline-block border border-gray-300 text-gray-800 dark:border-gray-700 dark:text-gray-300 hover:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white/50 dark:bg-black/50 backdrop-blur-sm" data-i18n="nav_store">
+                    <a href="store.html" class="px-8 md:px-10 py-3 md:py-4 rounded-full font-sans text-xs md:text-sm tracking-widest uppercase transition-all inline-block border border-gray-300 text-gray-800 dark:border-gray-600 dark:text-gray-300 hover:border-gray-800 dark:hover:bg-gray-800 hover:bg-gray-50 bg-white/50 dark:bg-black/50 backdrop-blur-sm" data-i18n="nav_store">
                         Store
                     </a>
                 </div>
@@ -192,89 +179,89 @@
         </div>
     </section>
 
-    <!-- Sections (Truncated for brevity, perfectly working as before) -->
-    <!-- ... About, Services ... -->
-    <section id="about" class="py-24 md:py-32 lg:py-40 bg-white/80 backdrop-blur-md border-t border-gray-100">
+    <!-- About Section -->
+    <section id="about" class="py-24 md:py-32 lg:py-40 bg-white/80 dark:bg-[#111827]/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
                 <div class="reveal">
-                    <h2 class="font-display text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 md:mb-8" data-i18n="about_title">More than just a store. A trusted space.</h2>
-                    <p class="font-sans text-lg md:text-xl text-gray-500 font-light leading-relaxed mb-6" data-i18n="about_p1">
+                    <h2 class="font-display text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 md:mb-8 text-gray-900 dark:text-white" data-i18n="about_title">More than just a store. A trusted space.</h2>
+                    <p class="font-sans text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light leading-relaxed mb-6" data-i18n="about_p1">
                         DotTech is an integrated tech project providing smart solutions in the computing world. We believe technology should serve people, not burden them. 
                     </p>
-                    <p class="font-sans text-base md:text-lg text-gray-400 font-light leading-relaxed" data-i18n="about_p2">
+                    <p class="font-sans text-base md:text-lg text-gray-400 dark:text-gray-500 font-light leading-relaxed" data-i18n="about_p2">
                         We work to simplify tech solutions and provide precise, well-studied services far from complexity or exploitation. We help our clients understand their options, choose what truly fits them, and get the absolute best performance from their devices.
                     </p>
                 </div>
                 <div class="reveal delay-100 relative mt-8 lg:mt-0">
                     <div class="absolute -right-4 md:-right-6 -bottom-4 md:-bottom-6 w-24 md:w-32 h-24 md:h-32 bg-brand-green/10 rounded-full blur-xl md:blur-2xl"></div>
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop" alt="Modern Tech Circuit" class="w-full aspect-[4/3] object-cover img-mask relative z-10 filter grayscale-[20%] hover:grayscale-0 transition-all duration-700 rounded-3xl shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop" alt="Modern Tech Circuit" class="w-full aspect-[4/3] object-cover rounded-3xl shadow-xl relative z-10 filter grayscale-[20%] hover:grayscale-0 transition-all duration-700">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services ... -->
-    <section id="services" class="py-24 md:py-32 lg:py-40 bg-[#FAFAFA]/90 backdrop-blur-md">
+    <!-- Services Section -->
+    <section id="services" class="py-24 md:py-32 lg:py-40 bg-[#FAFAFA]/90 dark:bg-[#0b0f19]/90 backdrop-blur-md">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
             <div class="mb-16 md:mb-24 reveal">
-                <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter" data-i18n="srv_title">Expertise.</h2>
+                <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter text-gray-900 dark:text-white" data-i18n="srv_title">Expertise.</h2>
             </div>
             <div class="border-t border-gray-200 dark:border-gray-800">
-                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal">
+                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal border-b border-gray-100 dark:border-gray-800 hover:border-brand-green transition-all hover:ps-6">
                     <div class="flex items-start gap-4 md:gap-8 md:w-1/2">
-                        <span class="service-num font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2 transition-colors">01</span>
-                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight" data-i18n="srv_1_t">Diagnostics & Repair</h3>
+                        <span class="font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2">01</span>
+                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight text-gray-900 dark:text-white" data-i18n="srv_1_t">Diagnostics & Repair</h3>
                     </div>
-                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 font-light leading-relaxed" data-i18n="srv_1_d">Accurate and reliable repair services for PCs and laptops. We diagnose honestly and provide effective solutions without unnecessary costs.</p></div>
+                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 dark:text-gray-400 font-light leading-relaxed" data-i18n="srv_1_d">Accurate and reliable repair services for PCs and laptops. We diagnose honestly and provide effective solutions without unnecessary costs.</p></div>
                 </div>
-                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal">
+                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal border-b border-gray-100 dark:border-gray-800 hover:border-brand-green transition-all hover:ps-6">
                     <div class="flex items-start gap-4 md:gap-8 md:w-1/2">
-                        <span class="service-num font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2 transition-colors">02</span>
-                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight" data-i18n="srv_2_t">Hardware Upgrades</h3>
+                        <span class="font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2">02</span>
+                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight text-gray-900 dark:text-white" data-i18n="srv_2_t">Hardware Upgrades</h3>
                     </div>
-                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 font-light leading-relaxed" data-i18n="srv_2_d">Breathe new life into your systems with professional hardware and OS upgrades tailored perfectly to your workflow.</p></div>
+                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 dark:text-gray-400 font-light leading-relaxed" data-i18n="srv_2_d">Breathe new life into your systems with professional hardware and OS upgrades tailored perfectly to your workflow.</p></div>
                 </div>
-                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal">
+                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal border-b border-gray-100 dark:border-gray-800 hover:border-brand-green transition-all hover:ps-6">
                     <div class="flex items-start gap-4 md:gap-8 md:w-1/2">
-                        <span class="service-num font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2 transition-colors">03</span>
-                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight" data-i18n="srv_3_t">Curated Accessories</h3>
+                        <span class="font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2">03</span>
+                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight text-gray-900 dark:text-white" data-i18n="srv_3_t">Curated Accessories</h3>
                     </div>
-                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 font-light leading-relaxed" data-i18n="srv_3_d">Carefully selected peripherals and accessories, rigorously tested to guarantee high quality and fair value.</p></div>
+                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 dark:text-gray-400 font-light leading-relaxed" data-i18n="srv_3_d">Carefully selected peripherals and accessories, rigorously tested to guarantee high quality and fair value.</p></div>
                 </div>
-                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal">
+                <div class="service-row py-8 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 reveal border-b border-gray-100 dark:border-gray-800 hover:border-brand-green transition-all hover:ps-6">
                     <div class="flex items-start gap-4 md:gap-8 md:w-1/2">
-                        <span class="service-num font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2 transition-colors">04</span>
-                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight" data-i18n="srv_4_t">Consulting</h3>
+                        <span class="font-display text-xs md:text-sm font-bold tracking-widest text-gray-300 dark:text-gray-600 mt-1 md:mt-2">04</span>
+                        <h3 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight text-gray-900 dark:text-white" data-i18n="srv_4_t">Consulting</h3>
                     </div>
-                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 font-light leading-relaxed" data-i18n="srv_4_d">Honest advice on what you actually need. We build relationships on trust, ensuring you buy or upgrade intelligently.</p></div>
+                    <div class="md:w-1/2"><p class="font-sans text-base md:text-lg text-gray-500 dark:text-gray-400 font-light leading-relaxed" data-i18n="srv_4_d">Honest advice on what you actually need. We build relationships on trust, ensuring you buy or upgrade intelligently.</p></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Store Preview -->
-    <section class="py-24 md:py-32 lg:py-40 bg-white/80 backdrop-blur-md relative border-t border-gray-100">
+    <!-- Store Preview Section -->
+    <section class="py-24 md:py-32 lg:py-40 bg-white/80 dark:bg-[#111827]/80 backdrop-blur-md relative border-t border-gray-100 dark:border-gray-800">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-20 reveal gap-4 md:gap-6">
                 <div>
-                    <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter" data-i18n="store_title">Hardware & Gear.</h2>
-                    <p class="font-sans text-lg md:text-xl text-gray-500 font-light mt-2 md:mt-4" data-i18n="store_desc">Premium tech gear curated by experts. No gimmicks.</p>
+                    <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter text-gray-900 dark:text-white" data-i18n="store_title">Hardware & Gear.</h2>
+                    <p class="font-sans text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light mt-2 md:mt-4" data-i18n="store_desc">Premium tech gear curated by experts. No gimmicks.</p>
                 </div>
-                <a href="store.html" class="font-sans text-sm font-bold tracking-widest uppercase border-b border-gray-900 pb-1 hover:text-brand-green hover:border-brand-green transition-colors w-fit" data-i18n="store_view_all">View All Products</a>
+                <a href="store.html" class="font-sans text-sm font-bold tracking-widest uppercase border-b border-gray-900 dark:border-gray-400 pb-1 hover:text-brand-green hover:border-brand-green transition-colors w-fit text-gray-900 dark:text-gray-300" data-i18n="store_view_all">View All Products</a>
             </div>
+            <!-- Products Grid -->
             <div id="preview-store-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 <div class="col-span-full text-center py-10 text-gray-400 font-sans">Loading featured products...</div>
             </div>
         </div>
     </section>
 
-    <!-- Articles Preview -->
-    <section class="py-24 md:py-32 lg:py-40 bg-[#FAFAFA]/90 backdrop-blur-md relative border-t border-gray-100">
+    <!-- Articles Preview Section -->
+    <section class="py-24 md:py-32 lg:py-40 bg-[#FAFAFA]/90 dark:bg-[#0b0f19]/90 backdrop-blur-md relative border-t border-gray-100 dark:border-gray-800">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
             <div class="mb-16 md:mb-20 reveal">
-                <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter">Insights.</h2>
-                <p class="font-sans text-lg md:text-xl text-gray-500 font-light mt-2 md:mt-4">Tech news, guides, and thoughts from DotTech.</p>
+                <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter text-gray-900 dark:text-white">Insights.</h2>
+                <p class="font-sans text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light mt-2 md:mt-4">Tech news, guides, and thoughts from DotTech.</p>
             </div>
             <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 <div class="col-span-full text-center py-10 text-gray-400 font-sans">Loading articles...</div>
@@ -282,9 +269,10 @@
         </div>
     </section>
 
+    <!-- Article Modal -->
     <div id="article-modal" class="fixed inset-0 z-[120] hidden items-center justify-center opacity-0 transition-opacity duration-300 p-4 sm:p-6">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeArticleModal()"></div>
-        <div class="bg-white rounded-3xl w-full max-w-4xl relative z-10 shadow-2xl flex flex-col max-h-[90vh] transform scale-95 transition-transform duration-300" id="article-modal-inner">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-4xl relative z-10 shadow-2xl flex flex-col max-h-[90vh] transform scale-95 transition-transform duration-300 border border-gray-100 dark:border-gray-800" id="article-modal-inner">
             <button onclick="closeArticleModal()" class="absolute top-4 right-4 z-20 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors backdrop-blur-md">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -293,29 +281,30 @@
             </div>
             <div class="p-6 sm:p-8 md:p-12 overflow-y-auto custom-scrollbar">
                 <div class="text-brand-green text-xs md:text-sm font-bold tracking-widest uppercase mb-3 md:mb-4" id="modal-date"></div>
-                <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-900 leading-tight" id="modal-title"></h2>
-                <div id="modal-content" class="font-sans text-base md:text-lg text-gray-600 font-light leading-relaxed markdown-body"></div>
+                <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-900 dark:text-white leading-tight" id="modal-title"></h2>
+                <div id="modal-content" class="font-sans text-base md:text-lg text-gray-600 dark:text-gray-400 font-light leading-relaxed markdown-body"></div>
             </div>
         </div>
     </div>
 
-    <!-- Vision & Roadmap ... -->
-    <section id="vision" class="py-24 md:py-32 lg:py-48 bg-white/90 backdrop-blur-md overflow-hidden border-t border-gray-100">
+    <!-- Vision & Roadmap -->
+    <section id="vision" class="py-24 md:py-32 lg:py-48 bg-white/90 dark:bg-[#111827]/90 backdrop-blur-md overflow-hidden border-t border-gray-100 dark:border-gray-800">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
             <div class="grid md:grid-cols-2 gap-16 md:gap-24">
                 <div class="reveal">
                     <p class="font-sans text-brand-green tracking-[0.2em] text-xs font-bold uppercase mb-6 md:mb-8" data-i18n="vis_label">The Vision</p>
-                    <h2 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight text-gray-900" data-i18n="vis_desc">To be a pioneering reference, raising tech awareness and building a community that uses technology safely.</h2>
+                    <h2 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight text-gray-900 dark:text-white" data-i18n="vis_desc">To be a pioneering reference, raising tech awareness and building a community that uses technology safely.</h2>
                 </div>
                 <div class="reveal delay-100 relative">
                     <div class="absolute -left-6 md:-left-12 -top-6 md:-top-12 w-16 md:w-24 h-16 md:h-24 border border-brand-teal rounded-full opacity-20"></div>
                     <p class="font-sans text-brand-blue tracking-[0.2em] text-xs font-bold uppercase mb-6 md:mb-8" data-i18n="mis_label">The Mission</p>
-                    <h2 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight text-gray-900" data-i18n="mis_desc">Delivering clear, simplified solutions that put users first, combining transparency and real support.</h2>
+                    <h2 class="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight text-gray-900 dark:text-white" data-i18n="mis_desc">Delivering clear, simplified solutions that put users first, combining transparency and real support.</h2>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Path Forward -->
     <section class="py-24 md:py-32 lg:py-48 bg-[#050505] text-white">
         <div class="max-w-screen-xl mx-auto px-6 lg:px-12">
             <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter mb-16 md:mb-24 reveal text-white" data-i18n="road_title">The Path Forward.</h2>
@@ -341,85 +330,83 @@
     </section>
 
     <!-- Footer / Contact -->
-    <footer id="contact" class="relative bg-white/90 backdrop-blur-md pt-24 md:pt-32 pb-12 z-10 border-t border-gray-100">
+    <footer id="contact" class="relative bg-white/90 dark:bg-[#0b0f19]/90 backdrop-blur-md pt-24 md:pt-32 pb-12 z-10 border-t border-gray-100 dark:border-gray-800">
         <div class="max-w-screen-2xl mx-auto px-6 lg:px-12 relative z-10">
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 md:gap-12 mb-16 md:mb-24 reveal">
                 <div class="max-w-xl">
-                    <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter text-gray-900 mb-4 md:mb-6" data-i18n="contact_title">Let's Talk.</h2>
-                    <p class="font-sans text-lg md:text-xl text-gray-500 font-light" data-i18n="contact_desc">Ready for a better tech experience? Reach out to optimize your digital life.</p>
+                    <h2 class="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tighter text-gray-900 dark:text-white mb-4 md:mb-6" data-i18n="contact_title">Let's Talk.</h2>
+                    <p class="font-sans text-lg md:text-xl text-gray-500 dark:text-gray-400 font-light" data-i18n="contact_desc">Ready for a better tech experience? Reach out to optimize your digital life.</p>
                 </div>
                 <div class="flex flex-col gap-4 md:gap-6">
-                    <a href="mailto:dottech.syria@gmail.com" class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight hover:text-brand-green transition-colors w-fit border-b-2 border-transparent hover:border-brand-green pb-1 md:pb-2" style="direction: ltr;">dottech.syria@gmail.com</a>
-                    <a href="tel:+963995505694" class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight hover:text-brand-green transition-colors w-fit border-b-2 border-transparent hover:border-brand-green pb-1 md:pb-2" style="direction: ltr; display: inline-block;">+963 995 505 694</a>
+                    <a href="mailto:dottech.syria@gmail.com" class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight text-gray-900 dark:text-white hover:text-brand-green dark:hover:text-brand-green transition-colors w-fit border-b-2 border-transparent hover:border-brand-green pb-1 md:pb-2" style="direction: ltr;">dottech.syria@gmail.com</a>
+                    <a href="tel:+963995505694" class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight text-gray-900 dark:text-white hover:text-brand-green dark:hover:text-brand-green transition-colors w-fit border-b-2 border-transparent hover:border-brand-green pb-1 md:pb-2" style="direction: ltr; display: inline-block;">+963 995 505 694</a>
                 </div>
             </div>
-            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 reveal">
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 reveal">
                 <div class="flex items-center gap-2">
                     <img src="./logo.png" alt="DotTech" class="h-5 object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all" onerror="this.style.display='none'">
-                    <span class="font-display font-semibold text-gray-900 tracking-tight">DotTech.</span>
+                    <span class="font-display font-semibold text-gray-900 dark:text-gray-400 tracking-tight">DotTech.</span>
                 </div>
                 <div class="font-sans text-xs md:text-sm text-gray-400" data-i18n="footer_rights">© 2026 DotTech. All rights reserved.</div>
                 <div class="flex gap-6 md:gap-8 text-xs md:text-sm font-sans font-medium text-gray-500">
-                    <a href="#" class="hover:text-gray-900 transition-colors">Facebook</a>
-                    <a href="#" class="hover:text-gray-900 transition-colors">Instagram</a>
-                    <a href="#" class="hover:text-gray-900 transition-colors">LinkedIn</a>
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors">Facebook</a>
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors">Instagram</a>
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors">LinkedIn</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <!-- Cart Drawer -->
-    <div id="cart-drawer" class="fixed top-0 bottom-0 ltr:right-0 rtl:left-0 w-full max-w-[400px] bg-white shadow-2xl z-[100] transform ltr:translate-x-full rtl:-translate-x-full transition-transform duration-300 flex flex-col">
-        <div class="p-4 sm:p-6 border-b border-gray-100 flex items-center justify-between">
-            <h2 class="font-display text-xl sm:text-2xl font-bold">Your Cart</h2>
-            <button onclick="toggleCart()" class="p-2 hover:bg-gray-100 rounded-full transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+    <div id="cart-drawer" class="fixed inset-y-0 end-0 w-full max-w-[400px] bg-white dark:bg-gray-900 shadow-2xl z-[150] transform translate-x-full rtl:-translate-x-full transition-transform duration-300 flex flex-col border-s border-gray-100 dark:border-gray-800">
+        <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <h2 class="font-display text-2xl font-bold text-gray-900 dark:text-white">Your Cart</h2>
+            <button onclick="toggleCart()" class="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
         </div>
-        <div class="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-4 custom-scrollbar" id="cart-items-container"></div>
-        <div class="p-4 sm:p-6 border-t border-gray-100 bg-gray-50">
+        
+        <div class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4 custom-scrollbar" id="cart-items-container">
+            <!-- Items injected by JS -->
+        </div>
+
+        <div class="p-5 sm:p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 mt-auto">
             <!-- Promo Code System -->
-            <div class="mb-4 sm:mb-5 bg-white border border-gray-100 rounded-xl p-3 shadow-sm dark:bg-gray-800">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Discount Code</label>
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Promo Code</label>
                 <div class="flex gap-2">
-                    <input type="text" id="promo-code-input" placeholder="e.g. DOT20" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none uppercase font-mono tracking-wider">
-                    <button onclick="applyPromo()" class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-brand-green transition-colors">Apply</button>
+                    <input type="text" id="promo-input" placeholder="Enter code" class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm focus:border-brand-green outline-none uppercase font-bold text-gray-900 dark:text-white transition-colors">
+                    <button id="apply-promo-btn" onclick="window.applyPromo()" class="bg-gray-900 dark:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-brand-green transition-colors">Apply</button>
                 </div>
-                <div id="promo-message" class="text-xs font-bold mt-2 hidden"></div>
             </div>
 
-            <div class="flex justify-between items-center font-display font-bold text-lg sm:text-xl mb-4 text-gray-900">
+            <div class="flex justify-between items-center font-display font-bold text-xl mb-4 text-gray-900 dark:text-white" id="cart-total-container">
                 <span>Total</span>
-                <div class="text-end">
-                    <div id="cart-original-total" class="text-xs sm:text-sm text-gray-400 line-through hidden mb-0.5"></div>
-                    <div id="cart-total">$0.00</div>
-                </div>
+                <span id="cart-total" class="currency-display" data-usd="0">0.00</span>
             </div>
-            <button onclick="checkout()" class="w-full btn-elegant text-white font-semibold py-3 sm:py-4 rounded-xl shadow-lg hover:-translate-y-1 transition-all flex items-center justify-center gap-2 text-sm sm:text-base">
-                Checkout securely <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <button onclick="checkout()" class="w-full btn-elegant text-white font-semibold py-3 sm:py-4 rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm sm:text-base">
+                Checkout Securely <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
         </div>
     </div>
-    <div id="cart-backdrop" onclick="toggleCart()" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[90] hidden opacity-0 transition-opacity duration-300"></div>
+    <div id="cart-backdrop" onclick="toggleCart()" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[140] hidden opacity-0 transition-opacity duration-300"></div>
 
     <!-- Profile Modal -->
-    <div id="profile-modal" class="fixed inset-0 z-[120] hidden items-center justify-center opacity-0 transition-opacity duration-300 px-4">
+    <div id="profile-modal" class="fixed inset-0 z-[200] hidden items-center justify-center opacity-0 transition-opacity duration-300 px-4">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-        <div class="bg-white rounded-3xl w-full max-w-md relative z-10 shadow-2xl p-6 sm:p-8 transform scale-95 transition-transform duration-300" id="profile-modal-inner">
-            <h2 class="font-display text-xl sm:text-2xl font-bold mb-2 text-gray-900">Complete Profile</h2>
-            <p class="text-gray-500 text-xs sm:text-sm mb-6 font-sans">Please provide your details to process orders.</p>
-            <input type="text" id="prof-fname" placeholder="First Name" class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-4 focus:border-brand-green outline-none font-sans text-sm sm:text-base">
-            <input type="text" id="prof-lname" placeholder="Last Name" class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-4 focus:border-brand-green outline-none font-sans text-sm sm:text-base">
-            <input type="tel" id="prof-phone" placeholder="Phone Number" class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-6 focus:border-brand-green outline-none font-sans text-sm sm:text-base">
-            <button onclick="window.dbAPI.saveProfile()" class="w-full bg-brand-green text-white font-semibold py-3 rounded-xl hover:shadow-lg transition-all font-sans text-sm sm:text-base">Save Details</button>
+        <div class="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-md relative z-10 shadow-2xl p-6 sm:p-8 transform scale-95 transition-transform duration-300 border border-gray-100 dark:border-gray-800" id="profile-modal-inner">
+            <h2 class="font-display text-2xl font-bold mb-2 text-gray-900 dark:text-white">Complete Profile</h2>
+            <p class="text-gray-500 text-sm mb-6 font-sans">Please provide your details to process orders.</p>
+            <input type="text" id="prof-fname" placeholder="First Name" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 mb-4 focus:border-brand-green outline-none font-sans text-gray-900 dark:text-white transition-colors">
+            <input type="text" id="prof-lname" placeholder="Last Name" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 mb-4 focus:border-brand-green outline-none font-sans text-gray-900 dark:text-white transition-colors">
+            <input type="tel" id="prof-phone" placeholder="Phone Number" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 mb-6 focus:border-brand-green outline-none font-sans text-gray-900 dark:text-white transition-colors">
+            <button onclick="window.dbAPI.saveProfile()" class="w-full bg-brand-green text-white font-semibold py-3 rounded-xl hover:bg-[#0e8a67] transition-colors font-sans shadow-md">Save Details</button>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl shadow-2xl z-[150] flex items-center gap-2 sm:gap-3 font-sans w-[calc(100%-3rem)] sm:w-auto">
-        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        <span id="toast-msg" class="text-sm sm:text-base truncate">Added to cart</span>
-    </div>
+    <div id="toast-container" class="fixed bottom-6 end-6 z-[250] flex flex-col gap-3 pointer-events-none"></div>
 
-    <!-- Firebase Script (Scope Fixed) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -438,59 +425,64 @@
         const app = initializeApp(firebaseConfig);
         window.auth = getAuth(app);
         window.db = getFirestore(app);
-        window.appId = 'dottech-store';
+        const appId = 'dottech-store';
 
         window.dbAPI = {
             syncCart: async (cartItems) => {
                 if(!window.auth.currentUser) return;
-                await setDoc(doc(window.db, 'artifacts', window.appId, 'users', window.auth.currentUser.uid, 'cart', 'data'), { items: cartItems });
+                await setDoc(doc(window.db, 'artifacts', appId, 'users', window.auth.currentUser.uid, 'cart', 'data'), { items: cartItems });
             },
-            placeOrder: async (cartData) => {
+            placeOrder: async (cartData, totalAmount) => {
                 if(!window.auth.currentUser) { window.location.href = 'auth.html'; return; }
                 try {
-                    const profDoc = await getDoc(doc(window.db, 'artifacts', window.appId, 'users', window.auth.currentUser.uid, 'profile', 'info'));
+                    const profDoc = await getDoc(doc(window.db, 'artifacts', appId, 'users', window.auth.currentUser.uid, 'profile', 'info'));
                     if(!profDoc.exists() || !profDoc.data().phoneNumber) {
                         const pModal = document.getElementById('profile-modal');
-                        pModal.classList.replace('hidden', 'flex');
+                        pModal.classList.remove('hidden'); pModal.classList.add('flex');
                         setTimeout(() => { pModal.style.opacity = '1'; document.getElementById('profile-modal-inner').classList.replace('scale-95', 'scale-100'); }, 10);
-                        alert("Please complete your profile details first to place an order.");
                         return false;
                     }
 
                     const userInfo = profDoc.data();
-                    let baseTotal = cartData.reduce((sum, item) => sum + (parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.qty), 0);
-                    let finalAmount = baseTotal * (1 - window.currentDiscountRate);
-
-                    await addDoc(collection(window.db, 'artifacts', window.appId, 'orders'), {
+                    
+                    await addDoc(collection(window.db, 'artifacts', appId, 'orders'), {
                         userId: window.auth.currentUser.uid,
                         customerName: `${userInfo.firstName || ''} ${userInfo.lastName || ''}`.trim(),
                         customerPhone: userInfo.phoneNumber,
                         customerEmail: userInfo.email,
                         items: cartData,
-                        subTotal: baseTotal, discountRate: window.currentDiscountRate, promoCode: window.currentPromoCode || null,
-                        total: finalAmount, currency: window.currentCurrency,
+                        subTotal: cartData.reduce((sum, i) => sum + (i.priceUSD * i.qty), 0),
+                        discountRate: window.currentDiscount || 0,
+                        total: totalAmount,
+                        totalCurrency: window.currentCurrency,
                         status: 'pending',
                         date: new Date().toISOString()
                     });
 
                     await window.dbAPI.syncCart([]);
                     return true;
-                } catch(e) { console.error("Order error:", e); alert("An error occurred while placing your order."); return false; }
+                } catch(e) { console.error("Order error:", e); showToast("Error placing order.", "error"); return false; }
             },
             saveProfile: async () => {
-                const f = document.getElementById('prof-fname').value; const l = document.getElementById('prof-lname').value; const p = document.getElementById('prof-phone').value;
-                if(!f || !l || !p) return alert("Please fill in all fields.");
+                const f = document.getElementById('prof-fname').value;
+                const l = document.getElementById('prof-lname').value;
+                const p = document.getElementById('prof-phone').value;
+                if(!f || !l || !p) return showToast("Please fill in all fields.", "error");
                 if(!window.auth.currentUser) return;
-                await setDoc(doc(window.db, 'artifacts', window.appId, 'users', window.auth.currentUser.uid, 'profile', 'info'), {
+                
+                await setDoc(doc(window.db, 'artifacts', appId, 'users', window.auth.currentUser.uid, 'profile', 'info'), {
                     firstName: f, lastName: l, phoneNumber: p, email: window.auth.currentUser.email
                 }, { merge: true });
+                
                 const pModal = document.getElementById('profile-modal');
-                pModal.style.opacity = '0'; document.getElementById('profile-modal-inner').classList.replace('scale-100', 'scale-95');
+                pModal.style.opacity = '0';
+                document.getElementById('profile-modal-inner').classList.replace('scale-100', 'scale-95');
                 setTimeout(() => pModal.classList.replace('flex', 'hidden'), 300);
+                showToast("Profile saved successfully.");
             }
         };
 
-        window.authAPI = { logout: () => { signOut(window.auth).then(() => { document.getElementById('user-dropdown').style.opacity = '0'; setTimeout(() => document.getElementById('user-dropdown').classList.add('hidden'), 200); }); } };
+        window.authAPI = { logout: () => { signOut(window.auth).then(() => window.location.reload()); } };
 
         onAuthStateChanged(window.auth, async (user) => {
             const loginBtn = document.getElementById('auth-login-btn');
@@ -502,14 +494,7 @@
                 profileMenu.classList.remove('hidden'); profileMenu.classList.add('flex');
                 avatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=109B74&color=fff`;
                 
-                const profDoc = await getDoc(doc(window.db, 'artifacts', window.appId, 'users', user.uid, 'profile', 'info'));
-                if(!profDoc.exists() || !profDoc.data().firstName || !profDoc.data().phoneNumber) {
-                    const pModal = document.getElementById('profile-modal');
-                    pModal.classList.replace('hidden', 'flex');
-                    setTimeout(() => { pModal.style.opacity = '1'; document.getElementById('profile-modal-inner').classList.replace('scale-95', 'scale-100'); }, 10);
-                }
-
-                const cartDoc = await getDoc(doc(window.db, 'artifacts', window.appId, 'users', user.uid, 'cart', 'data'));
+                const cartDoc = await getDoc(doc(window.db, 'artifacts', appId, 'users', user.uid, 'cart', 'data'));
                 if(cartDoc.exists() && window.setCart) window.setCart(cartDoc.data().items || []);
             } else {
                 loginBtn.classList.remove('hidden');
@@ -519,11 +504,38 @@
         });
     </script>
 
-    <!-- UI Logic & Data Fetching -->
     <script>
-        const translations = { /*... translations defined earlier in full, kept short here to save space as it's identical ...*/ };
-        // I will redefine the missing ones so it's fully copy-pasteable without errors.
-        Object.assign(translations, {
+        window.currentCurrency = localStorage.getItem('dottech_currency') || 'USD';
+        window.exchangeRate = 14500;
+        window.currentDiscount = 0;
+        let cart = [];
+
+        /* --- UI & Theming --- */
+        window.toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('dottech_theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').innerHTML = isDark 
+                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>'
+                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+        };
+        
+        if (localStorage.getItem('dottech_theme') === 'dark' || (!localStorage.getItem('dottech_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>';
+        }
+
+        const formatPrice = (usdValue) => window.currentCurrency === 'USD' ? `$${usdValue.toLocaleString('en-US', {minimumFractionDigits: 2})}` : `${(usdValue * window.exchangeRate).toLocaleString()} SYP`;
+        
+        window.toggleCurrency = () => {
+            window.currentCurrency = window.currentCurrency === 'USD' ? 'SYP' : 'USD';
+            localStorage.setItem('dottech_currency', window.currentCurrency);
+            document.getElementById('currency-toggle-btn').textContent = window.currentCurrency;
+            document.querySelectorAll('.currency-display').forEach(el => { el.textContent = formatPrice(parseFloat(el.dataset.usd)); });
+            renderCart();
+        };
+
+        const translations = {
             en: {
                 nav_story: "Our Story", nav_expertise: "Expertise", nav_store: "Store", nav_future: "Future", nav_contact: "Initiate Contact",
                 hero_est: "Est. March 2025", hero_title: "Tech in <br><span class='text-gradient italic font-light'>Human</span> Service.", hero_desc: "A starting point towards a better, simpler, and more aware tech experience. We simplify the complex.", hero_btn: "Discover Solutions",
@@ -532,7 +544,7 @@
                 store_title: "Hardware & Gear.", store_desc: "Premium tech gear curated by experts. No gimmicks.", store_view_all: "View All Products",
                 vis_label: "The Vision", vis_desc: "To be a pioneering reference, raising tech awareness and building a community that uses technology safely.", mis_label: "The Mission", mis_desc: "Delivering clear, simplified solutions that put users first, combining transparency and real support.",
                 road_title: "The Path Forward.", road_p1_t: "Phase I", road_p1_d: "Establish accurate diagnostics, build reputation on pure honesty, and offer fair-priced quality tech.", road_p2_t: "Phase II", road_p2_d: "Expand consulting, host community tech events, and introduce bespoke software solutions.", road_p3_t: "Phase III", road_p3_d: "Build a trusted global brand, become a comprehensive platform, and integrate ethical AI for users.",
-                contact_title: "Let's Talk.", contact_desc: "Ready for a better tech experience? Reach out to optimize your digital life.", footer_rights: "© 2026 DotTech. All rights reserved."
+                contact_title: "Let's Talk.", contact_desc: "Ready for a better tech experience? Reach out to optimize your digital life.", footer_rights: "© 2026 DotTech. All rights reserved.", btn_add: "Add"
             },
             ar: {
                 nav_story: "قصتنا", nav_expertise: "خبراتنا", nav_store: "المتجر", nav_future: "المستقبل", nav_contact: "تواصل معنا",
@@ -542,184 +554,177 @@
                 store_title: "العتاد والملحقات.", store_desc: "معدات تقنية متميزة مختارة من قبل الخبراء. جودة مضمونة.", store_view_all: "عرض جميع المنتجات",
                 vis_label: "الرؤية", vis_desc: "أن نكون مرجعًا تقنياً رائدًا، يساهم في رفع الوعي التقني وبناء مجتمع يعتمد على التكنولوجيا بشكل فعال وآمن.", mis_label: "الرسالة", mis_desc: "تقديم حلول واضحة ومبسطة تضع المستخدمين في المقام الأول، وتجمع بين الاحترافية، الشفافية والدعم الحقيقي.",
                 road_title: "خارطة الطريق.", road_p1_t: "المرحلة الأولى", road_p1_d: "تأسيس خدمة تشخيص دقيقة، بناء سمعة قوية قائمة على الصدق، وتقديم تقنيات عالية الجودة بأسعار عادلة.", road_p2_t: "المرحلة الثانية", road_p2_d: "توسيع نطاق الاستشارات التقنية، استضافة فعاليات مجتمعية، وإدخال حلول برمجية مخصصة للعملاء.", road_p3_t: "المرحلة الثالثة", road_p3_d: "بناء علامة تجارية معروفة وموثوقة، التحول لمنصة تقنية شاملة، ودمج الذكاء الاصطناعي لخدمة المستخدمين.",
-                contact_title: "لنتحدث.", contact_desc: "مستعد لتجربة تقنية أفضل؟ تواصل معنا لتحسين كفاءة أجهزتك وحياتك الرقمية.", footer_rights: "© ٢٠٢٦ دوت تك. جميع الحقوق محفوظة."
+                contact_title: "لنتحدث.", contact_desc: "مستعد لتجربة تقنية أفضل؟ تواصل معنا لتحسين كفاءة أجهزتك وحياتك الرقمية.", footer_rights: "© ٢٠٢٦ دوت تك. جميع الحقوق محفوظة.", btn_add: "أضف"
             }
-        });
+        };
 
         let currentLang = localStorage.getItem('dottech_lang') || 'en';
-        window.currentCurrency = localStorage.getItem('dottech_currency') || 'USD';
-        let currentTheme = localStorage.getItem('dottech_theme') || 'light';
-        const EXCHANGE_RATE = 15000;
-
-        function applyTheme(theme) {
-            const html = document.documentElement; const btn = document.getElementById('theme-toggle-btn');
-            if (theme === 'dark') {
-                html.classList.add('dark');
-                btn.innerHTML = `<svg class="w-5 h-5 text-gray-300 hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
-            } else {
-                html.classList.remove('dark');
-                btn.innerHTML = `<svg class="w-5 h-5 text-amber-500 hover:text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>`;
-            }
-        }
-        function toggleTheme() { currentTheme = currentTheme === 'light' ? 'dark' : 'light'; localStorage.setItem('dottech_theme', currentTheme); applyTheme(currentTheme); }
-
-        window.toggleCurrency = function() {
-            window.currentCurrency = window.currentCurrency === 'USD' ? 'SYP' : 'USD';
-            localStorage.setItem('dottech_currency', window.currentCurrency);
-            document.getElementById('curr-toggle-btn').textContent = window.currentCurrency;
-            renderCart(); fetchPreviewProducts();
-        }
-
-        function formatPrice(usdPriceStr) {
-            if(!usdPriceStr) return '';
-            const usdNum = parseFloat(usdPriceStr.replace(/[^0-9.-]+/g,""));
-            if(isNaN(usdNum)) return usdPriceStr;
-            return window.currentCurrency === 'SYP' ? (usdNum * EXCHANGE_RATE).toLocaleString() + ' ل.س' : '$' + usdNum.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        }
-
+        
         function applyLanguage(lang) {
             document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            const btn = document.getElementById('lang-toggle-btn'); if (btn) btn.textContent = lang === 'en' ? 'AR' : 'EN';
+            document.getElementById('lang-toggle-btn').textContent = lang === 'en' ? 'AR' : 'EN';
             document.querySelectorAll('[data-i18n]').forEach(el => { 
                 const key = el.getAttribute('data-i18n'); 
-                if (translations[lang] && translations[lang][key]) { el.innerHTML = translations[lang][key]; }
+                if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
             });
+            if(window.updateSpherePosition) window.updateSpherePosition(lang === 'ar');
         }
         function toggleLanguage() { currentLang = currentLang === 'en' ? 'ar' : 'en'; localStorage.setItem('dottech_lang', currentLang); applyLanguage(currentLang); }
 
-        /* --- Menus & Cart UI --- */
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden'); setTimeout(() => menu.classList.remove('ltr:translate-x-full', 'rtl:-translate-x-full'), 10);
-            } else {
-                menu.classList.add('ltr:translate-x-full', 'rtl:-translate-x-full'); setTimeout(() => menu.classList.add('hidden'), 300);
-            }
+            if (menu.classList.contains('hidden')) { menu.classList.remove('hidden'); setTimeout(() => menu.classList.remove('translate-x-full', 'rtl:-translate-x-full'), 10); } 
+            else { menu.classList.add('translate-x-full', 'rtl:-translate-x-full'); setTimeout(() => menu.classList.add('hidden'), 300); }
         }
         function toggleUserDropdown() {
             const menu = document.getElementById('user-dropdown');
-            if(menu.classList.contains('hidden')) { menu.classList.remove('hidden'); setTimeout(() => menu.style.opacity = '1', 10); } 
-            else { menu.style.opacity = '0'; setTimeout(() => menu.classList.add('hidden'), 200); }
+            menu.classList.toggle('hidden');
         }
 
-        let cart = [];
-        window.currentPromoCode = null; window.currentDiscountRate = 0;
-        window.setCart = function(newCart) { cart = newCart; updateCartBadge(); renderCart(); };
+        /* --- Cart & Promo Logic --- */
+        window.setCart = (newCart) => { cart = newCart; updateCartBadge(); renderCart(); };
 
-        function toggleCart() {
+        window.toggleCart = () => {
             const drawer = document.getElementById('cart-drawer'); const backdrop = document.getElementById('cart-backdrop');
-            if (backdrop.classList.contains('hidden')) {
-                backdrop.classList.remove('hidden'); setTimeout(() => backdrop.style.opacity = '1', 10);
-                drawer.classList.remove('ltr:translate-x-full', 'rtl:-translate-x-full');
-            } else {
-                backdrop.style.opacity = '0'; setTimeout(() => backdrop.classList.add('hidden'), 300);
-                drawer.classList.add('ltr:translate-x-full', 'rtl:-translate-x-full');
+            if (backdrop.classList.contains('hidden')) { 
+                backdrop.classList.remove('hidden'); setTimeout(() => backdrop.style.opacity = '1', 10); 
+                drawer.classList.remove('translate-x-full', 'rtl:-translate-x-full'); 
+            } else { 
+                backdrop.style.opacity = '0'; setTimeout(() => backdrop.classList.add('hidden'), 300); 
+                drawer.classList.add('translate-x-full', 'rtl:-translate-x-full'); 
             }
-        }
+        };
 
-        window.applyPromoCode = async () => {
-    const inputEl = document.getElementById('promo-input');
-    if(!inputEl) return;
-    
-    // تنظيف النص وتكبير الأحرف ليتطابق تماماً مع قاعدة البيانات
-    const code = inputEl.value.trim().toUpperCase(); 
-    if(!code) return alert("الرجاء إدخال كود الخصم أولاً.");
+        window.addToCart = (id, name, priceUSD, img) => {
+            const existing = cart.find(i => i.id === id);
+            if (existing) existing.qty += 1; else cart.push({ id, name, priceUSD: parseFloat(priceUSD), img, qty: 1 });
+            updateCartBadge(); renderCart(); showToast("Added to cart", "success");
+            if(window.dbAPI && window.dbAPI.syncCart) window.dbAPI.syncCart(cart);
+        };
 
-    const btn = document.getElementById('apply-promo-btn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = "جاري التحقق...";
-    btn.disabled = true;
+        window.updateCartQty = (id, change) => {
+            const idx = cart.findIndex(i => i.id === id);
+            if(idx > -1) {
+                if(change === -99) cart.splice(idx, 1);
+                else { cart[idx].qty += change; if(cart[idx].qty <= 0) cart.splice(idx, 1); }
+                updateCartBadge(); renderCart();
+                if(window.dbAPI && window.dbAPI.syncCart) window.dbAPI.syncCart(cart);
+            }
+        };
 
-    try {
-        // جلب دوال Firebase
-        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-        
-        // البحث عن الكود في المسار الصحيح
-        const promoDoc = await getDoc(doc(window.db, 'artifacts', 'dottech-store', 'promos', code));
-        
-        if(promoDoc.exists() && promoDoc.data().active !== false) {
-            window.currentDiscount = promoDoc.data().discount;
-            alert(`تم تفعيل الكود بنجاح! حصلت على خصم ${window.currentDiscount}%`);
-            renderCart(); // إعادة رسم السلة لإظهار السعر الجديد
-        } else {
-            alert("Invalid Promo Code. الكود غير صحيح أو منتهي الصلاحية.");
-            window.currentDiscount = 0;
-            renderCart();
-        }
-    } catch(error) {
-        console.error("Promo Error:", error);
-        alert("حدث خطأ أثناء التحقق. يرجى التأكد من اتصالك بالإنترنت وصلاحيات Firestore.");
-    } finally {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }
-};
-
-        function addToCart(id, name, price, img) {
-            const existingItem = cart.find(item => item.id === id);
-            if (existingItem) existingItem.qty += 1; else cart.push({ id, name, price, img, qty: 1 });
-            updateCartBadge(); renderCart(); showToast();
-            if(window.dbAPI) window.dbAPI.syncCart(cart);
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartBadge(); renderCart();
-            if(window.dbAPI) window.dbAPI.syncCart(cart);
-        }
-
-        function updateCartBadge() { document.getElementById('cart-badge').textContent = cart.reduce((sum, item) => sum + item.qty, 0); }
+        function updateCartBadge() { document.getElementById('cart-badge').textContent = cart.reduce((sum, i) => sum + i.qty, 0); }
 
         function renderCart() {
             const container = document.getElementById('cart-items-container'); 
-            const totalEl = document.getElementById('cart-total');
-            const origTotalEl = document.getElementById('cart-original-total');
-            container.innerHTML = ''; let totalUsd = 0;
-            if(cart.length === 0) { container.innerHTML = `<div class="text-center text-gray-400 mt-10">Your cart is empty.</div>`; totalEl.textContent = formatPrice("0"); origTotalEl.classList.add('hidden'); return; }
+            const totalContainer = document.getElementById('cart-total-container');
+            container.innerHTML = ''; 
             
+            if(cart.length === 0) { 
+                container.innerHTML = `<div class="text-center text-gray-500 mt-10">Your cart is empty.</div>`; 
+                totalContainer.innerHTML = `<span>Total</span><span class="currency-display font-bold text-gray-900 dark:text-white" data-usd="0">${formatPrice(0)}</span>`; 
+                return; 
+            }
+
+            let subtotalUSD = 0;
             cart.forEach(item => {
-                const numPrice = parseFloat(item.price.replace(/[^0-9.-]+/g,"")); totalUsd += numPrice * item.qty;
+                subtotalUSD += item.priceUSD * item.qty;
                 container.innerHTML += `
-                    <div class="flex gap-4 items-center p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
-                        <img src="${item.img}" class="w-16 h-16 object-cover rounded-lg bg-gray-50 mix-blend-multiply">
+                    <div class="flex gap-4 items-center p-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm">
+                        <img src="${item.img}" class="w-16 h-16 object-contain rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 p-1">
                         <div class="flex-1">
-                            <h4 class="font-display font-semibold text-sm line-clamp-1">${item.name}</h4>
-                            <div class="text-brand-green font-medium text-sm mt-1">${formatPrice(item.price)}</div>
+                            <h4 class="font-display font-semibold text-sm line-clamp-1 text-gray-900 dark:text-white">${item.name}</h4>
+                            <div class="text-brand-green font-bold text-sm mt-1">${formatPrice(item.priceUSD)}</div>
                         </div>
                         <div class="flex flex-col items-end gap-2">
-                            <span class="text-xs text-gray-400 font-medium">Qty: ${item.qty}</span>
-                            <button onclick="removeFromCart('${item.id}')" class="text-xs text-red-500 hover:underline">Remove</button>
+                            <div class="flex items-center gap-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1">
+                                <button onclick="updateCartQty('${item.id}', -1)" class="text-gray-500 dark:text-gray-400 font-bold px-1 hover:text-brand-green">-</button>
+                                <span class="text-xs font-semibold w-4 text-center text-gray-900 dark:text-white">${item.qty}</span>
+                                <button onclick="updateCartQty('${item.id}', 1)" class="text-gray-500 dark:text-gray-400 font-bold px-1 hover:text-brand-green">+</button>
+                            </div>
+                            <button onclick="updateCartQty('${item.id}', -99)" class="text-xs text-red-500 hover:text-red-700 font-medium">Remove</button>
                         </div>
                     </div>`;
             });
-            
-            if(window.currentDiscountRate > 0) {
-                const discountedTotalUsd = totalUsd * (1 - window.currentDiscountRate);
-                origTotalEl.textContent = formatPrice(totalUsd.toString()); origTotalEl.classList.remove('hidden');
-                totalEl.textContent = formatPrice(discountedTotalUsd.toString()); totalEl.classList.add('text-brand-green');
+
+            if (window.currentDiscount > 0) {
+                const discountAmount = subtotalUSD * (window.currentDiscount / 100);
+                const finalUSD = subtotalUSD - discountAmount;
+                totalContainer.innerHTML = `
+                    <div class="flex flex-col w-full">
+                        <div class="flex justify-between items-center text-sm text-gray-500 line-through mb-1">
+                            <span>Subtotal</span><span>${formatPrice(subtotalUSD)}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm text-brand-green mb-2">
+                            <span>Discount (${window.currentDiscount}%)</span><span>- ${formatPrice(discountAmount)}</span>
+                        </div>
+                        <div class="flex justify-between items-center font-display font-bold text-xl text-gray-900 dark:text-white">
+                            <span>Final Total</span><span class="currency-display" data-usd="${finalUSD}">${formatPrice(finalUSD)}</span>
+                        </div>
+                    </div>`;
+                window.finalCheckoutTotal = finalUSD;
             } else {
-                origTotalEl.classList.add('hidden');
-                totalEl.textContent = formatPrice(totalUsd.toString()); totalEl.classList.remove('text-brand-green');
+                totalContainer.innerHTML = `
+                    <span>Total</span><span class="currency-display font-bold text-gray-900 dark:text-white" data-usd="${subtotalUSD}">${formatPrice(subtotalUSD)}</span>`;
+                window.finalCheckoutTotal = subtotalUSD;
             }
         }
 
-        function showToast(msg = "Added to cart") {
-            const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg;
-            t.classList.replace('translate-y-20', 'translate-y-0'); t.style.opacity = '1';
-            setTimeout(() => { t.classList.replace('translate-y-0', 'translate-y-20'); t.style.opacity = '0'; }, 3000);
-        }
+        window.applyPromo = async function() {
+            const inputEl = document.getElementById('promo-input');
+            if(!inputEl) return;
+            const code = inputEl.value.trim().toUpperCase(); 
+            if(!code) return showToast("Please enter a promo code first.", "error");
 
-        async function checkout() {
-            if (cart.length === 0) return alert("Your cart is empty.");
+            const btn = document.getElementById('apply-promo-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "...";
+            btn.disabled = true;
+
+            try {
+                const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+                const promoDoc = await getDoc(doc(window.db, 'artifacts', 'dottech-store', 'promos', code));
+                
+                if(promoDoc.exists() && promoDoc.data().active !== false) {
+                    window.currentDiscount = promoDoc.data().discount;
+                    showToast(`Promo applied! ${window.currentDiscount}% off.`, "success");
+                    renderCart();
+                } else {
+                    showToast("Invalid or expired promo code.", "error");
+                    window.currentDiscount = 0;
+                    renderCart();
+                }
+            } catch(error) {
+                console.error("Promo Error:", error);
+                showToast("Error verifying code.", "error");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        window.checkout = async () => {
+            if (cart.length === 0) return showToast("Your cart is empty.", "error");
             if (window.dbAPI && window.dbAPI.placeOrder) {
                 const btn = document.querySelector('#cart-drawer button[onclick="checkout()"]');
-                const originalText = btn.innerHTML; btn.innerHTML = "Processing..."; btn.disabled = true;
-                const success = await window.dbAPI.placeOrder(cart);
-                if(success) { window.setCart([]); toggleCart(); alert("Order placed securely! We will contact you soon."); document.getElementById('promo-code-input').value=''; window.applyPromo(); }
-                btn.innerHTML = originalText; btn.disabled = false;
-            } else { alert("Please sign in to checkout."); window.location.href = "auth.html"; }
+                const orig = btn.innerHTML; btn.innerHTML = "Processing..."; btn.disabled = true;
+                const totalToPay = window.finalCheckoutTotal || cart.reduce((sum, i) => sum + (i.priceUSD * i.qty), 0);
+                const success = await window.dbAPI.placeOrder(cart, totalToPay);
+                if(success) { window.setCart([]); window.currentDiscount = 0; document.getElementById('promo-input').value = ''; toggleCart(); showToast("Order placed securely!", "success"); }
+                btn.innerHTML = orig; btn.disabled = false;
+            } else { window.location.href = "auth.html"; }
+        };
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const isError = type === 'error';
+            toast.className = `px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 font-sans toast-enter pointer-events-auto border ${isError ? 'bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-200 border-red-200 dark:border-red-800' : 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-gray-700 dark:border-gray-200'}`;
+            const icon = isError ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>` : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>`;
+            toast.innerHTML = `<svg class="w-5 h-5 ${isError ? 'text-red-500' : 'text-brand-green'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icon}</svg> <span class="font-medium text-sm">${message}</span>`;
+            document.getElementById('toast-container').appendChild(toast);
+            setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
+        /* --- CSV Parser --- */
         function parseCSV(str) {
             const arr = []; let quote = false; let row = 0, col = 0;
             for (let c = 0; c < str.length; c++) {
@@ -736,35 +741,65 @@
             return arr;
         }
 
+        /* --- Data Fetching (Products & Articles) --- */
         async function fetchPreviewProducts() {
             try {
                 const res = await fetch("https://docs.google.com/spreadsheets/d/1onrTRPtJVMCVRTRI0zVm5lv_ra1PCZAnXHLpjFslMQs/export?format=csv");
                 const txt = await res.text(); const rows = parseCSV(txt).slice(1);
                 
                 const products = rows.map((cols, i) => {
-                    if(!cols || cols.length < 4 || !cols[1]) return null;
-                    return { id: 'p'+i, img: cols[0], name: cols[1], desc: cols[2], priceStr: cols[3] || '0' };
+                    if(!cols || cols.length < 2 || !cols[1].trim()) return null;
+                    const priceStr = cols[3] ? cols[3].trim() : '0';
+                    return {
+                        id: 'p'+i, img: cols[0] ? cols[0].trim() : '', name: cols[1] ? cols[1].trim() : '', desc: cols[2] ? cols[2].trim() : '',
+                        priceUSD: parseFloat(priceStr.replace(/[^0-9.-]+/g,"")) || 0,
+                        oldPriceStr: cols[4] ? cols[4].trim() : '', color: cols[6] ? cols[6].trim() : '',
+                        subCategory: cols[9] ? cols[9].trim() : '', company: cols[10] ? cols[10].trim() : ''
+                    };
                 }).filter(p => p !== null).slice(0, 4);
 
                 const grid = document.getElementById('preview-store-grid');
-                if (products.length === 0) throw new Error("No items");
+                if (products.length === 0) { grid.innerHTML = "<div class='col-span-full text-center text-gray-500 py-10'>No preview items.</div>"; return; }
 
-                let html = '';
-                products.forEach((p, i) => {
-                    html += `
-                        <div class="product-card rounded-2xl p-4 flex flex-col active" style="animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${i*0.1}s forwards; opacity: 0; transform: translateY(30px);">
-                            <div class="product-img-wrapper rounded-xl bg-gray-50 aspect-square mb-6">
-                                <img src="${p.img}" class="w-full h-full object-cover mix-blend-multiply" onerror="this.src='https://placehold.co/400x400/eee/999?text=Item'">
+                const addTxt = translations[currentLang]?.btn_add || 'Add';
+                grid.innerHTML = products.map((p, i) => {
+                    let tags = '';
+                    if (p.subCategory || (p.color && p.color.toLowerCase() !== 'no color')) {
+                        tags = `<div class="flex flex-wrap gap-2 mb-3">`;
+                        if (p.subCategory) tags += `<span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-[10px] uppercase tracking-wider text-gray-700 dark:text-gray-300 font-bold">${p.subCategory}</span>`;
+                        if (p.color && p.color.toLowerCase() !== 'no color') tags += `<span class="px-2.5 py-1 border border-gray-200 dark:border-gray-700 rounded-md text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold">${p.color}</span>`;
+                        tags += `</div>`;
+                    }
+
+                    let brand = p.company ? `<div class="text-[11px] font-bold text-brand-green uppercase tracking-widest mb-2 flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>${p.company}</div>` : '';
+                    
+                    let priceHtml = p.oldPriceStr 
+                        ? `<div class="flex flex-col items-start"><span class="text-sm font-medium text-gray-400 line-through leading-none mb-1">${formatPrice(parseFloat(p.oldPriceStr.replace(/[^0-9.-]+/g,""))||0)}</span><span class="text-2xl font-display font-bold text-red-500 leading-none currency-display" data-usd="${p.priceUSD}">${formatPrice(p.priceUSD)}</span></div>`
+                        : `<span class="text-2xl font-display font-bold text-gray-900 dark:text-white leading-none currency-display" data-usd="${p.priceUSD}">${formatPrice(p.priceUSD)}</span>`;
+                    
+                    let saleBadge = p.oldPriceStr ? `<div class="absolute top-4 start-4 bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg z-10 uppercase tracking-widest animate-pulse">Sale</div>` : '';
+
+                    return `
+                    <div class="product-card flex flex-col h-full group reveal delay-${i*100}" onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">
+                        ${saleBadge}
+                        <div class="aspect-[4/3] bg-gray-50 dark:bg-[#111827] relative overflow-hidden p-6 border-b border-gray-100/50 dark:border-gray-800 product-image-container flex items-center justify-center">
+                            <img src="${p.img}" alt="${p.name}" class="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://placehold.co/400x300/f8f9fa/a1a1aa?text=Image+Unavailable'">
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            ${brand}${tags}
+                            <h3 class="text-lg md:text-xl font-display font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 leading-tight group-hover:text-brand-green transition-colors">${p.name}</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-2 flex-1 font-sans leading-relaxed">${p.desc}</p>
+                            
+                            <div class="flex items-end justify-between mt-auto pt-5 border-t border-gray-100 dark:border-gray-800">
+                                ${priceHtml}
+                                <button onclick="event.stopPropagation(); addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.priceUSD}', '${p.img}')" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-brand-green dark:hover:bg-brand-green dark:hover:text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    ${addTxt}
+                                </button>
                             </div>
-                            <h3 class="font-display text-xl font-semibold mb-1">${p.name}</h3>
-                            <p class="font-sans text-sm text-gray-400 mb-4 line-clamp-2">${p.desc}</p>
-                            <div class="mt-auto flex items-center justify-between">
-                                <span class="font-sans font-medium text-lg text-brand-green">${formatPrice(p.priceStr)}</span>
-                                <button onclick="addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.priceStr}', '${p.img}')" class="bg-gray-900 text-white text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-full hover:bg-brand-green transition-colors shadow-md hover:shadow-lg">Add</button>
-                            </div>
-                        </div>`;
-                });
-                grid.innerHTML = html;
+                        </div>
+                    </div>`;
+                }).join('');
             } catch (e) { document.getElementById('preview-store-grid').innerHTML = "<div class='col-span-full text-red-500 font-medium text-center py-10'>Could not load preview products.</div>"; }
         }
 
@@ -780,26 +815,22 @@
                 }).filter(a => a !== null).slice(0, 3);
 
                 const grid = document.getElementById('articles-grid');
-                if (articlesData.length === 0) throw new Error("No articles");
+                if (articlesData.length === 0) { grid.innerHTML = "<div class='col-span-full text-gray-500 font-medium text-center py-10'>No articles.</div>"; return; }
 
-                let html = '';
-                articlesData.forEach((a, i) => {
-                    html += `
-                        <div class="group cursor-pointer reveal" onclick="openArticleModal(${a.id})">
-                            <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-gray-50 border border-gray-100">
-                                <img src="${a.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/eee/999?text=Article'">
-                            </div>
-                            <div class="text-brand-green text-xs font-bold tracking-widest uppercase mb-3">${a.date}</div>
-                            <h3 class="font-display text-2xl font-semibold mb-3 group-hover:text-brand-green transition-colors leading-tight">${a.title}</h3>
-                            <p class="font-sans text-gray-500 font-light line-clamp-3 mb-4">${a.excerpt}</p>
-                            <span class="font-sans text-sm font-medium border-b border-gray-900 pb-0.5 group-hover:border-brand-green group-hover:text-brand-green transition-colors">Read More</span>
-                        </div>`;
-                });
-                grid.innerHTML = html;
+                grid.innerHTML = articlesData.map((a, i) => `
+                    <div class="group cursor-pointer reveal delay-${i*100}" onclick="openArticleModal(${a.id})">
+                        <div class="w-full aspect-[4/3] rounded-3xl overflow-hidden mb-6 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                            <img src="${a.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/eee/999?text=Article'">
+                        </div>
+                        <div class="text-brand-green text-xs font-bold tracking-widest uppercase mb-3">${a.date}</div>
+                        <h3 class="font-display text-2xl font-semibold mb-3 group-hover:text-brand-green transition-colors leading-tight text-gray-900 dark:text-white">${a.title}</h3>
+                        <p class="font-sans text-gray-500 dark:text-gray-400 font-light line-clamp-3 mb-4">${a.excerpt}</p>
+                        <span class="font-sans text-sm font-medium border-b border-gray-900 dark:border-white pb-0.5 group-hover:border-brand-green group-hover:text-brand-green transition-colors text-gray-900 dark:text-white">Read More</span>
+                    </div>`).join('');
             } catch (e) { document.getElementById('articles-grid').innerHTML = "<div class='col-span-full text-red-500 font-medium text-center py-10'>Could not load articles.</div>"; }
         }
 
-        function openArticleModal(id) {
+        window.openArticleModal = function(id) {
             const a = articlesData.find(x => x.id === id); if (!a) return;
             document.getElementById('modal-img').src = a.img;
             document.getElementById('modal-date').textContent = a.date;
@@ -811,52 +842,83 @@
             setTimeout(() => { modal.style.opacity = '1'; inner.classList.replace('scale-95', 'scale-100'); }, 10);
         }
 
-        function closeArticleModal() {
+        window.closeArticleModal = function() {
             const modal = document.getElementById('article-modal'); const inner = document.getElementById('article-modal-inner');
             modal.style.opacity = '0'; inner.classList.replace('scale-100', 'scale-95');
             setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); }, 300);
         }
 
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes slideUpFade { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }`;
-        document.head.appendChild(style);
+        // Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
 
         document.addEventListener("DOMContentLoaded", () => {
-            applyLanguage(currentLang); applyTheme(currentTheme); fetchPreviewProducts(); fetchArticles();
-            document.getElementById('curr-toggle-btn').textContent = window.currentCurrency;
+            document.getElementById('currency-toggle-btn').textContent = window.currentCurrency;
+            applyLanguage(currentLang); 
+            fetchPreviewProducts(); 
+            fetchArticles();
+            reveal(); // Trigger on load
         });
+    </script>
 
-        /* --- 3D WebGL (Digital Wave) --- */
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
         window.onload = function() {
-            const script = document.createElement('script');
-            script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-            script.onload = init3DTechBackground; document.head.appendChild(script);
-        };
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0xffffff, 20, 80);
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 15, 30); camera.lookAt(0, 0, 0);
 
-        function init3DTechBackground() {
-            const container = document.getElementById('canvas-container'); const scene = new THREE.Scene(); scene.fog = new THREE.Fog(0xffffff, 20, 80);
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 15, 30); camera.lookAt(0, 0, 0);
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); container.appendChild(renderer.domElement);
-            const geometry = new THREE.PlaneGeometry(100, 100, 40, 40); geometry.rotateX(-Math.PI / 2);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const geometry = new THREE.PlaneGeometry(100, 100, 40, 40);
+            geometry.rotateX(-Math.PI / 2);
             const material = new THREE.PointsMaterial({ color: 0x1B8A98, size: 0.15, transparent: true, opacity: 0.8 });
             const particles = new THREE.Points(geometry, material); scene.add(particles);
+
             const positionAttribute = geometry.getAttribute('position');
             let mouseX = 0, mouseY = 0; const windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
             document.addEventListener('mousemove', (e) => { mouseX = (e.clientX - windowHalfX) * 0.05; mouseY = (e.clientY - windowHalfY) * 0.05; });
-            window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+            
+            window.updateSpherePosition = function(isRTL) {
+                // Not a sphere anymore, but left hook for future updates
+            };
+
+            window.addEventListener('resize', () => { 
+                camera.aspect = window.innerWidth / window.innerHeight; 
+                camera.updateProjectionMatrix(); 
+                renderer.setSize(window.innerWidth, window.innerHeight); 
+            });
+
             const clock = new THREE.Clock();
             function animate() {
-                requestAnimationFrame(animate); const time = clock.getElapsedTime() * 0.8; const positions = geometry.getAttribute('position');
+                requestAnimationFrame(animate);
+                const time = clock.getElapsedTime() * 0.8; const positions = geometry.getAttribute('position');
                 for (let i = 0; i < positionAttribute.count; i++) {
                     const x = positions.getX(i); const z = positions.getZ(i);
-                    const wave = Math.sin(x * 0.2 + time) * 1.5 + Math.cos(z * 0.2 + time) * 1.5 + Math.sin((x + z) * 0.1 - time) * 2; positions.setY(i, wave - 5);
+                    const wave = Math.sin(x * 0.2 + time) * 1.5 + Math.cos(z * 0.2 + time) * 1.5 + Math.sin((x + z) * 0.1 - time) * 2; 
+                    positions.setY(i, wave - 5);
                 }
                 positions.needsUpdate = true;
                 camera.position.x += (mouseX - camera.position.x) * 0.05; camera.position.y += (15 + -mouseY - camera.position.y) * 0.05; camera.lookAt(0, 0, 0);
                 particles.rotation.y = Math.sin(time * 0.1) * 0.2; renderer.render(scene, camera);
             }
             animate();
-        }
+        };
     </script>
 </body>
 </html>
