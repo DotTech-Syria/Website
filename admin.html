@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -21,6 +22,13 @@
             }
         }
     </script>
+
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- jsPDF for Invoice Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
     <style>
         body { background-color: #f8fafc; color: #0f172a; transition: background-color 0.3s ease; }
@@ -44,7 +52,7 @@
             <div class="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-blue rounded-xl flex items-center justify-center shadow-lg text-white font-display font-bold text-xl">D</div>
             <div>
                 <h1 class="font-display font-bold text-xl leading-none">DotTech Admin</h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Control Center</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Enterprise Control Center</p>
             </div>
         </div>
         <div class="flex items-center gap-4">
@@ -58,11 +66,15 @@
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden">
         
-        <!-- Sidebar -->
+        <!-- Sidebar Navigation -->
         <aside class="w-64 glass-panel border-r border-gray-200 dark:border-gray-800 flex flex-col gap-2 p-4 shrink-0 z-40">
-            <button onclick="switchTab('orders')" id="tab-orders" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all bg-brand-green/10 text-brand-green">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all bg-brand-green/10 text-brand-green">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                Analytics
+            </button>
+            <button onclick="switchTab('orders')" id="tab-orders" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                Orders
+                Orders & Invoices
             </button>
             <button onclick="switchTab('users')" id="tab-users" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -71,6 +83,11 @@
             <button onclick="switchTab('promos')" id="tab-promos" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                 Promo Codes
+            </button>
+            <div class="flex-1"></div>
+            <button onclick="switchTab('settings')" id="tab-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 border-t border-gray-200 dark:border-gray-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                Site Settings
             </button>
         </aside>
 
@@ -83,8 +100,41 @@
                 <h2 class="text-xl font-display font-bold">Verifying Access...</h2>
             </div>
 
+            <!-- Dashboard / Analytics Section -->
+            <section id="section-dashboard" class="max-w-6xl mx-auto space-y-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-display font-bold">Business Overview</h2>
+                    <button onclick="window.adminAPI.loadDashboard()" class="text-sm font-medium text-brand-green hover:underline">Refresh Data</button>
+                </div>
+                
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-brand-green">
+                        <p class="text-sm text-gray-500 uppercase tracking-wider font-bold mb-1">Total Revenue</p>
+                        <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white" id="stat-revenue">...</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-brand-blue">
+                        <p class="text-sm text-gray-500 uppercase tracking-wider font-bold mb-1">Total Orders</p>
+                        <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white" id="stat-orders">...</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-purple-500">
+                        <p class="text-sm text-gray-500 uppercase tracking-wider font-bold mb-1">Registered Users</p>
+                        <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white" id="stat-users">...</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl border-l-4 border-yellow-500">
+                        <p class="text-sm text-gray-500 uppercase tracking-wider font-bold mb-1">Exchange Rate</p>
+                        <h3 class="text-2xl font-display font-bold text-gray-900 dark:text-white" id="stat-exchange">...</h3>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="glass-panel p-6 rounded-2xl shadow-sm h-80">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </section>
+
             <!-- Orders Section -->
-            <section id="section-orders" class="max-w-6xl mx-auto space-y-6">
+            <section id="section-orders" class="max-w-6xl mx-auto space-y-6 hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-display font-bold">Recent Orders</h2>
                     <button onclick="window.adminAPI.loadOrders()" class="text-sm font-medium text-brand-green hover:underline">Refresh List</button>
@@ -107,7 +157,7 @@
                                 <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Customer Name</th>
                                 <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Email Address</th>
                                 <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Phone Number</th>
-                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-right">Quick Contact</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="users-container" class="divide-y divide-gray-200 dark:divide-gray-800">
@@ -120,7 +170,6 @@
             <!-- Promos Section -->
             <section id="section-promos" class="max-w-4xl mx-auto space-y-6 hidden">
                 <h2 class="text-2xl font-display font-bold mb-6">Manage Promo Codes</h2>
-                
                 <div class="glass-panel p-6 rounded-2xl shadow-sm mb-8">
                     <h3 class="text-lg font-semibold mb-4">Create New Code</h3>
                     <div class="flex flex-col md:flex-row gap-4 items-end">
@@ -135,7 +184,6 @@
                         <button onclick="window.adminAPI.createPromo()" class="w-full md:w-auto bg-brand-green text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg transition-all">Add Code</button>
                     </div>
                 </div>
-
                 <div class="glass-panel rounded-2xl overflow-hidden shadow-sm">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -151,14 +199,56 @@
                     </table>
                 </div>
             </section>
+
+            <!-- Settings Section -->
+            <section id="section-settings" class="max-w-4xl mx-auto space-y-6 hidden">
+                <h2 class="text-2xl font-display font-bold mb-6">Global Site Settings</h2>
+                <div class="glass-panel p-6 rounded-2xl shadow-sm mb-8 border-l-4 border-yellow-500">
+                    <h3 class="text-lg font-semibold mb-2">Currency Exchange Rate</h3>
+                    <p class="text-sm text-gray-500 mb-6">Set the global USD to SYP exchange rate. This will automatically update all prices on the storefront.</p>
+                    <div class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-1 w-full max-w-sm">
+                            <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">1 USD = (SYP)</label>
+                            <input type="number" id="setting-exchange-rate" placeholder="e.g. 15000" class="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2.5 outline-none focus:border-brand-green font-bold text-gray-900 dark:text-white text-xl">
+                        </div>
+                        <button onclick="window.adminAPI.saveSettings()" class="w-full md:w-auto bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold px-8 py-2.5 rounded-xl hover:shadow-lg transition-all">Update Rate</button>
+                    </div>
+                </div>
+            </section>
         </main>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 w-full max-w-md border border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-display font-bold mb-4">Edit Customer Profile</h3>
+            <input type="hidden" id="edit-user-path">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">First Name</label>
+                    <input type="text" id="edit-user-fname" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Last Name</label>
+                    <input type="text" id="edit-user-lname" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Phone Number</label>
+                    <input type="text" id="edit-user-phone" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green" dir="ltr">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeEditModal()" class="px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors">Cancel</button>
+                <button onclick="window.adminAPI.saveEditedUser()" class="px-4 py-2 bg-brand-green text-white rounded-lg font-bold hover:shadow-lg transition-all">Save Changes</button>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, updateDoc, query, orderBy, collectionGroup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, query, orderBy, collectionGroup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
@@ -175,10 +265,13 @@
         const db = getFirestore(app);
         const appId = 'dottech-store';
         const adminEmail = 'dottech.syria@gmail.com';
+        
+        let revenueChartInstance = null;
+        let globalExchangeRate = 15000;
 
         // UI Interactions
         window.switchTab = (tab) => {
-            ['orders', 'promos', 'users'].forEach(t => {
+            ['dashboard', 'orders', 'users', 'promos', 'settings'].forEach(t => {
                 document.getElementById(`section-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-${t}`);
                 btn.classList.remove('bg-brand-green/10', 'text-brand-green');
@@ -190,9 +283,11 @@
             activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-100', 'dark:text-gray-400', 'dark:hover:bg-gray-800');
             activeBtn.classList.add('bg-brand-green/10', 'text-brand-green');
             
+            if(tab === 'dashboard') window.adminAPI.loadDashboard();
             if(tab === 'orders') window.adminAPI.loadOrders();
             if(tab === 'promos') window.adminAPI.loadPromos();
             if(tab === 'users') window.adminAPI.loadUsers();
+            if(tab === 'settings') window.adminAPI.loadSettings();
         };
 
         const formatDate = (isoString) => {
@@ -200,8 +295,99 @@
             return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         };
 
-        // Admin API Functions
+        window.closeEditModal = () => {
+            document.getElementById('edit-user-modal').classList.add('hidden');
+            document.getElementById('edit-user-modal').classList.remove('flex');
+        };
+
         window.adminAPI = {
+            
+            // --- Settings & Dashboard ---
+            loadSettings: async () => {
+                try {
+                    const docSnap = await getDoc(doc(db, 'artifacts', appId, 'settings', 'global'));
+                    if (docSnap.exists() && docSnap.data().exchangeRate) {
+                        globalExchangeRate = docSnap.data().exchangeRate;
+                        document.getElementById('setting-exchange-rate').value = globalExchangeRate;
+                        document.getElementById('stat-exchange').textContent = globalExchangeRate.toLocaleString() + ' SYP';
+                    }
+                } catch(e) { console.error("Settings load error:", e); }
+            },
+
+            saveSettings: async () => {
+                const rate = parseInt(document.getElementById('setting-exchange-rate').value);
+                if(isNaN(rate) || rate <= 0) return alert("Please enter a valid exchange rate.");
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'settings', 'global'), { exchangeRate: rate }, { merge: true });
+                    globalExchangeRate = rate;
+                    document.getElementById('stat-exchange').textContent = rate.toLocaleString() + ' SYP';
+                    alert("Exchange rate updated successfully. It will now apply to the storefront.");
+                } catch(e) { alert("Error saving settings."); console.error(e); }
+            },
+
+            loadDashboard: async () => {
+                try {
+                    await window.adminAPI.loadSettings();
+                    
+                    const ordersSnap = await getDocs(query(collection(db, 'artifacts', appId, 'orders'), orderBy('date', 'asc')));
+                    const usersSnap = await getDocs(collectionGroup(db, 'profile'));
+                    
+                    let totalRev = 0;
+                    let totalOrders = 0;
+                    let salesByDate = {};
+
+                    ordersSnap.forEach(doc => {
+                        const data = doc.data();
+                        totalOrders++;
+                        if(data.status !== 'cancelled') {
+                            // Normalize to USD for chart calculation
+                            let usdValue = data.totalCurrency === 'SYP' ? (data.total / globalExchangeRate) : data.total;
+                            totalRev += usdValue;
+                            
+                            // Group by date (MM/DD)
+                            const dateStr = new Date(data.date).toLocaleDateString([], {month: 'short', day: 'numeric'});
+                            salesByDate[dateStr] = (salesByDate[dateStr] || 0) + usdValue;
+                        }
+                    });
+
+                    document.getElementById('stat-revenue').textContent = '$' + totalRev.toLocaleString(undefined, {maximumFractionDigits: 0});
+                    document.getElementById('stat-orders').textContent = totalOrders;
+                    
+                    let userCount = 0;
+                    usersSnap.forEach(d => { if(d.id === 'info') userCount++; });
+                    document.getElementById('stat-users').textContent = userCount;
+
+                    // Draw Chart
+                    const ctx = document.getElementById('revenueChart').getContext('2d');
+                    if(revenueChartInstance) revenueChartInstance.destroy();
+                    
+                    revenueChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: Object.keys(salesByDate),
+                            datasets: [{
+                                label: 'Revenue (USD)',
+                                data: Object.values(salesByDate),
+                                borderColor: '#109B74',
+                                backgroundColor: 'rgba(16, 155, 116, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { beginAtZero: true, grid: { color: 'rgba(128,128,128,0.1)' } },
+                                x: { grid: { display: false } }
+                            }
+                        }
+                    });
+                } catch(e) { console.error("Dashboard error:", e); }
+            },
+
+            // --- Orders & Invoices ---
             loadOrders: async () => {
                 const container = document.getElementById('orders-container');
                 try {
@@ -209,10 +395,13 @@
                     const snap = await getDocs(q);
                     if(snap.empty) { container.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10">No orders found.</p>'; return; }
                     
+                    window.currentOrdersData = {}; // Cache for PDF generation
                     let html = '';
+                    
                     snap.forEach(docSnap => {
                         const order = docSnap.data();
                         const id = docSnap.id;
+                        window.currentOrdersData[id] = order;
                         
                         let statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
                         if(order.status === 'processing') statusColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
@@ -226,13 +415,16 @@
                         if(phoneClean.startsWith('09')) phoneClean = '+963' + phoneClean.substring(1);
 
                         html += `
-                        <div class="glass-panel p-5 rounded-2xl flex flex-col">
+                        <div class="glass-panel p-5 rounded-2xl flex flex-col relative overflow-hidden">
                             <div class="flex justify-between items-start border-b border-gray-100 dark:border-gray-800 pb-3 mb-3">
                                 <div>
                                     <h3 class="font-bold text-lg leading-tight">${order.customerName || 'Guest'}</h3>
                                     <div class="text-xs text-gray-500 mt-1">${formatDate(order.date)} • ID: ${id.substring(0,6).toUpperCase()}</div>
                                 </div>
-                                <span class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-md ${statusColor}">${order.status}</span>
+                                <div class="flex flex-col items-end gap-2">
+                                    <span class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-md ${statusColor}">${order.status}</span>
+                                    <button onclick="window.adminAPI.generateInvoice('${id}')" class="text-xs font-bold text-brand-blue hover:underline flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> PDF Invoice</button>
+                                </div>
                             </div>
                             <div class="flex-1 mb-4 space-y-1 bg-gray-50 dark:bg-gray-800/30 p-3 rounded-xl border border-gray-100 dark:border-gray-800">${itemsHtml}</div>
                             <div class="flex justify-between items-center font-display font-bold text-lg mb-4">
@@ -257,39 +449,6 @@
                 } catch(e) { console.error(e); container.innerHTML = '<p class="text-red-500">Error loading orders.</p>'; }
             },
 
-            loadUsers: async () => {
-                const container = document.getElementById('users-container');
-                try {
-                    // Using collectionGroup to fetch all 'profile' subcollections
-                    const snap = await getDocs(collectionGroup(db, 'profile'));
-                    if(snap.empty) { container.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-500">No registered users found.</td></tr>'; return; }
-                    
-                    let html = '';
-                    snap.forEach(docSnap => {
-                        if(docSnap.id === 'info') {
-                            const u = docSnap.data();
-                            let phoneClean = (u.phoneNumber || '').replace(/[^0-9+]/g, '');
-                            if(phoneClean.startsWith('09')) phoneClean = '+963' + phoneClean.substring(1);
-
-                            html += `
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                                <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">${u.firstName || ''} ${u.lastName || ''}</td>
-                                <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm">${u.email || 'N/A'}</td>
-                                <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm" dir="ltr">${u.phoneNumber || 'N/A'}</td>
-                                <td class="px-6 py-4 text-right flex justify-end gap-3">
-                                    <a href="mailto:${u.email}" class="text-brand-blue hover:text-blue-700 font-medium text-sm flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Email</a>
-                                    <a href="https://wa.me/${phoneClean}" target="_blank" class="text-brand-green hover:text-green-700 font-medium text-sm flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg> Chat</a>
-                                </td>
-                            </tr>`;
-                        }
-                    });
-                    container.innerHTML = html;
-                } catch(e) { 
-                    console.error(e); 
-                    container.innerHTML = '<tr><td colspan="4" class="text-red-500 p-6 text-sm font-medium">Error loading users. Please ensure Firestore Rules allow "collectionGroup" reading for the "profile" collection.</td></tr>'; 
-                }
-            },
-
             updateStatus: async (orderId, newStatus) => {
                 if(!newStatus) return;
                 try {
@@ -298,6 +457,171 @@
                 } catch(e) { alert("Error updating status."); console.error(e); }
             },
 
+            generateInvoice: (orderId) => {
+                const order = window.currentOrdersData[orderId];
+                if(!order) return alert("Order data not found");
+                
+                const { jsPDF } = window.jspdf;
+                const docPdf = new jsPDF();
+                
+                // Colors and Fonts
+                docPdf.setFillColor(16, 155, 116); // Brand Green
+                docPdf.rect(0, 0, 210, 40, 'F');
+                docPdf.setTextColor(255, 255, 255);
+                docPdf.setFontSize(24);
+                docPdf.setFont("helvetica", "bold");
+                docPdf.text("DotTech.", 14, 25);
+                
+                docPdf.setFontSize(10);
+                docPdf.setFont("helvetica", "normal");
+                docPdf.text("INVOICE", 180, 20, { align: "right" });
+                docPdf.text("#" + orderId.substring(0,8).toUpperCase(), 180, 26, { align: "right" });
+
+                // Customer Info
+                docPdf.setTextColor(50, 50, 50);
+                docPdf.setFontSize(12);
+                docPdf.setFont("helvetica", "bold");
+                docPdf.text("Bill To:", 14, 55);
+                docPdf.setFont("helvetica", "normal");
+                docPdf.setFontSize(10);
+                docPdf.text(order.customerName || "Customer", 14, 62);
+                docPdf.text(order.customerEmail || "N/A", 14, 68);
+                docPdf.text(order.customerPhone || "N/A", 14, 74);
+
+                // Date Info
+                docPdf.setFont("helvetica", "bold");
+                docPdf.text("Date:", 140, 55);
+                docPdf.setFont("helvetica", "normal");
+                docPdf.text(new Date(order.date).toLocaleDateString(), 140, 62);
+
+                // Table
+                const tableCol = ["Qty", "Item Description", "Unit Price", "Total"];
+                const tableRows = [];
+                let calculatedSubtotal = 0;
+
+                order.items.forEach(item => {
+                    // Extract numeric price for cleaner PDF table if stored as string
+                    let unitPriceStr = item.price.toString().replace(/[^0-9.-]+/g,"");
+                    let unitPriceNum = parseFloat(unitPriceStr) || 0;
+                    let lineTotal = unitPriceNum * item.qty;
+                    calculatedSubtotal += lineTotal;
+                    
+                    let sym = order.totalCurrency === 'SYP' ? 'SYP ' : '$';
+                    tableRows.push([
+                        item.qty, 
+                        item.name, 
+                        sym + unitPriceNum.toLocaleString(), 
+                        sym + lineTotal.toLocaleString()
+                    ]);
+                });
+
+                docPdf.autoTable({
+                    startY: 85,
+                    head: [tableCol],
+                    body: tableRows,
+                    theme: 'striped',
+                    headStyles: { fillColor: [37, 126, 166] }, // Brand Blue
+                    styles: { font: "helvetica", fontSize: 10 }
+                });
+
+                // Totals
+                const finalY = docPdf.lastAutoTable.finalY + 15;
+                docPdf.setFont("helvetica", "bold");
+                docPdf.text("Subtotal:", 140, finalY);
+                docPdf.text("Discount:", 140, finalY + 8);
+                docPdf.setFontSize(12);
+                docPdf.setTextColor(16, 155, 116);
+                docPdf.text("Total:", 140, finalY + 18);
+
+                docPdf.setFont("helvetica", "normal");
+                docPdf.setTextColor(50, 50, 50);
+                let sym = order.totalCurrency === 'SYP' ? 'SYP ' : '$';
+                
+                let discountAmount = calculatedSubtotal - order.total;
+                // Deal with rounding errors if no discount
+                if(discountAmount < 1 && discountAmount > -1) discountAmount = 0;
+
+                docPdf.text(sym + calculatedSubtotal.toLocaleString(), 180, finalY, { align: "right" });
+                docPdf.text("- " + sym + discountAmount.toLocaleString(), 180, finalY + 8, { align: "right" });
+                docPdf.setFont("helvetica", "bold");
+                docPdf.text(sym + order.total.toLocaleString(), 180, finalY + 18, { align: "right" });
+
+                // Footer
+                docPdf.setFont("helvetica", "italic");
+                docPdf.setFontSize(9);
+                docPdf.setTextColor(150, 150, 150);
+                docPdf.text("Thank you for your business - DotTech", 105, 280, { align: "center" });
+
+                docPdf.save(`Invoice_DotTech_${orderId.substring(0,6)}.pdf`);
+            },
+
+            // --- Users / Customers ---
+            loadUsers: async () => {
+                const container = document.getElementById('users-container');
+                try {
+                    const snap = await getDocs(collectionGroup(db, 'profile'));
+                    if(snap.empty) { container.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-500">No registered users found.</td></tr>'; return; }
+                    
+                    let html = '';
+                    snap.forEach(docSnap => {
+                        if(docSnap.id === 'info') {
+                            const u = docSnap.data();
+                            const path = docSnap.ref.path; // Exact path to update this specific user
+                            
+                            let phoneClean = (u.phoneNumber || '').replace(/[^0-9+]/g, '');
+                            if(phoneClean.startsWith('09')) phoneClean = '+963' + phoneClean.substring(1);
+
+                            html += `
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                                <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">${u.firstName || ''} ${u.lastName || ''}</td>
+                                <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm">${u.email || 'N/A'}</td>
+                                <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm" dir="ltr">${u.phoneNumber || 'N/A'}</td>
+                                <td class="px-6 py-4 text-right flex justify-end gap-2">
+                                    <button onclick="window.adminAPI.openEditUser('${path}', '${u.firstName || ''}', '${u.lastName || ''}', '${u.phoneNumber || ''}')" class="text-gray-500 hover:text-brand-green bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Edit</button>
+                                    <a href="https://wa.me/${phoneClean}" target="_blank" class="text-white bg-[#25D366] hover:bg-[#20b858] px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Chat</a>
+                                </td>
+                            </tr>`;
+                        }
+                    });
+                    container.innerHTML = html;
+                } catch(e) { 
+                    console.error(e); 
+                    container.innerHTML = '<tr><td colspan="4" class="text-red-500 p-6 text-sm font-medium">Error loading users. Ensure Firestore Rules allow collectionGroup reading.</td></tr>'; 
+                }
+            },
+
+            openEditUser: (path, fname, lname, phone) => {
+                document.getElementById('edit-user-path').value = path;
+                document.getElementById('edit-user-fname').value = fname;
+                document.getElementById('edit-user-lname').value = lname;
+                document.getElementById('edit-user-phone').value = phone;
+                
+                document.getElementById('edit-user-modal').classList.remove('hidden');
+                document.getElementById('edit-user-modal').classList.add('flex');
+            },
+
+            saveEditedUser: async () => {
+                const path = document.getElementById('edit-user-path').value;
+                const f = document.getElementById('edit-user-fname').value;
+                const l = document.getElementById('edit-user-lname').value;
+                const p = document.getElementById('edit-user-phone').value;
+
+                if(!path || !f) return alert("First name is required.");
+
+                try {
+                    // We construct a document reference directly from the path string
+                    const userRef = doc(db, path);
+                    await updateDoc(userRef, { firstName: f, lastName: l, phoneNumber: p });
+                    closeEditModal();
+                    window.adminAPI.loadUsers();
+                    alert("Customer profile updated successfully.");
+                } catch(e) {
+                    console.error(e);
+                    alert("Error updating user data.");
+                }
+            },
+
+            // --- Promos ---
             loadPromos: async () => {
                 const container = document.getElementById('promos-container');
                 try {
@@ -344,7 +668,6 @@
             }
         };
 
-        // Authentication Gatekeeper
         const gate = document.getElementById('auth-gate');
         gate.classList.remove('hidden');
 
@@ -361,7 +684,8 @@
                     </div>`;
             } else {
                 gate.classList.add('hidden');
-                window.adminAPI.loadOrders();
+                // Load Dashboard by default
+                window.adminAPI.loadDashboard();
             }
         });
 
