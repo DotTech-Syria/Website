@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getDatabase, ref, get, child, set, remove, push, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 const firebaseConfig = {
@@ -135,7 +135,12 @@ window.dbAPI = {
         } else {
             alert("Profile saved successfully.");
         }
-    }
+    },
+    getDocs: getDocs,
+    collection: collection,
+    doc: doc,
+    updateDoc: updateDoc,
+    deleteDoc: deleteDoc
 };
 
 window.authAPI = window.authAPI || {};

@@ -81,6 +81,10 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
                 Articles (Blog)
             </button>
+            <button onclick="switchTab('reviews')" id="tab-reviews" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                Customer Reviews
+            </button>
             <div class="flex-1"></div>
             <button onclick="switchTab('settings')" id="tab-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 border-t border-gray-200 dark:border-gray-800">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -252,6 +256,32 @@
                 </div>
             </section>
 
+            <!-- Reviews Section -->
+            <section id="section-reviews" class="space-y-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-display font-bold">Customer Reviews</h2>
+                        <p class="text-sm text-gray-500">Manage product feedback and ratings.</p>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-2xl overflow-hidden shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 dark:bg-gray-800/50">
+                            <tr>
+                                <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Product</th>
+                                <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">User</th>
+                                <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Rating</th>
+                                <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 w-1/3">Comment</th>
+                                <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-table-body" class="divide-y divide-gray-100 dark:divide-gray-800">
+                            <!-- Loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <!-- Settings Section -->
             <section id="section-settings" class="max-w-4xl mx-auto space-y-6 hidden">
                 <h2 class="text-2xl font-display font-bold mb-6">Global Site Settings</h2>
@@ -391,6 +421,29 @@
         </div>
     </div>
 
+    <!-- Review Edit Modal -->
+    <div id="review-modal" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-fade-in border border-gray-100 dark:border-gray-800 p-8">
+            <h3 class="text-xl font-display font-bold mb-6">Edit Review</h3>
+            <input type="hidden" id="edit-review-id">
+            <input type="hidden" id="edit-review-prod-id">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Rating (1-5)</label>
+                    <input type="number" id="edit-review-rating" min="1" max="5" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Comment</label>
+                    <textarea id="edit-review-text" rows="4" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="document.getElementById('review-modal').classList.replace('flex', 'hidden')" class="px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors">Cancel</button>
+                <button onclick="window.adminAPI.saveEditedReview()" class="px-4 py-2 bg-brand-green text-white rounded-lg font-bold hover:shadow-lg transition-all">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Common JS Logic -->
     <script src="common.js"></script>
 
@@ -423,7 +476,7 @@
 
         // UI Interactions
         window.switchTab = (tab) => {
-            ['dashboard', 'orders', 'users', 'promos', 'products', 'articles', 'settings'].forEach(t => {
+            ['dashboard', 'orders', 'users', 'promos', 'products', 'articles', 'reviews', 'settings'].forEach(t => {
                 const sec = document.getElementById(`section-${t}`);
                 if (sec) sec.classList.add('hidden');
                 const btn = document.getElementById(`tab-${t}`);
@@ -447,6 +500,7 @@
             if(tab === 'users') window.adminAPI.loadUsers();
             if(tab === 'products') window.adminAPI.loadProducts();
             if(tab === 'articles') window.adminAPI.loadArticles();
+            if(tab === 'reviews') window.adminAPI.loadReviews();
             if(tab === 'settings') window.adminAPI.loadSettings();
         };
 
@@ -1077,6 +1131,79 @@
                     await remove(ref(window.rtdb, `artifacts/${appId}/articles/${key}`));
                     window.adminAPI.loadArticles();
                 } catch(e) { console.error(e); alert("Error deleting article."); }
+            },
+
+            // --- Reviews ---
+            loadReviews: async () => {
+                const tbody = document.getElementById('reviews-table-body');
+                tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center"><div class="w-6 h-6 border-2 border-brand-green border-t-transparent rounded-full animate-spin mx-auto"></div></td></tr>';
+                try {
+                    const productsSnap = await get(ref(window.rtdb, `artifacts/${appId}/products`));
+                    if (!productsSnap.exists()) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-gray-500">No products found.</td></tr>';
+                        return;
+                    }
+
+                    const products = productsSnap.val();
+                    let html = '';
+                    let foundAny = false;
+
+                    for (const pId in products) {
+                        const reviewsSnap = await window.dbAPI.getDocs(window.dbAPI.collection(window.db, 'artifacts', appId, 'products', pId, 'reviews'));
+                        reviewsSnap.forEach(doc => {
+                            foundAny = true;
+                            const r = doc.data();
+                            const rId = doc.id;
+                            html += `
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${products[pId].name}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${r.userName || 'Anonymous'}</td>
+                                <td class="px-4 py-3 text-yellow-500 font-bold">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div class="line-clamp-2">${r.text}</div></td>
+                                <td class="px-4 py-3 text-right space-x-2">
+                                    <button onclick="window.adminAPI.openReviewEditModal('${pId}', '${rId}', ${r.rating}, '${r.text.replace(/'/g, "\\'")}')" class="text-brand-blue hover:text-brand-green transition-colors">Edit</button>
+                                    <button onclick="window.adminAPI.deleteReview('${pId}', '${rId}')" class="text-red-500 hover:text-red-700 transition-colors">Delete</button>
+                                </td>
+                            </tr>`;
+                        });
+                    }
+
+                    if (!foundAny) tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-gray-500">No reviews found.</td></tr>';
+                    else tbody.innerHTML = html;
+                } catch (e) { console.error(e); tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-red-500">Error loading reviews.</td></tr>'; }
+            },
+
+            openReviewEditModal: (pId, rId, rating, text) => {
+                document.getElementById('edit-review-id').value = rId;
+                document.getElementById('edit-review-prod-id').value = pId;
+                document.getElementById('edit-review-rating').value = rating;
+                document.getElementById('edit-review-text').value = text;
+                document.getElementById('review-modal').classList.replace('hidden', 'flex');
+            },
+
+            saveEditedReview: async () => {
+                const rId = document.getElementById('edit-review-id').value;
+                const pId = document.getElementById('edit-review-prod-id').value;
+                const rating = parseInt(document.getElementById('edit-review-rating').value);
+                const text = document.getElementById('edit-review-text').value.trim();
+
+                if (!text) return alert("Comment is required.");
+
+                try {
+                    const rRef = window.dbAPI.doc(window.db, 'artifacts', appId, 'products', pId, 'reviews', rId);
+                    await window.dbAPI.updateDoc(rRef, { rating, text });
+                    document.getElementById('review-modal').classList.replace('flex', 'hidden');
+                    window.adminAPI.loadReviews();
+                } catch (e) { console.error(e); alert("Error updating review."); }
+            },
+
+            deleteReview: async (pId, rId) => {
+                if (!confirm("Are you sure you want to delete this review?")) return;
+                try {
+                    const rRef = window.dbAPI.doc(window.db, 'artifacts', appId, 'products', pId, 'reviews', rId);
+                    await window.dbAPI.deleteDoc(rRef);
+                    window.adminAPI.loadReviews();
+                } catch (e) { console.error(e); alert("Error deleting review."); }
             },
 
             // --- CSV Operations ---
