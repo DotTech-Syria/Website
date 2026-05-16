@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DotTech | Data Migration to Firebase RTDB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+        <h1 class="text-3xl font-bold mb-4">Data Migration</h1>
+        <p class="text-gray-500 mb-8">Click the buttons below to fetch data from the Google Sheets CSVs and push them into the Firebase Realtime Database.</p>
+        
+        <div id="log" class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto mb-8 whitespace-pre-wrap">Waiting to start...</div>
+        
+        <div class="flex gap-4">
+            <button onclick="startMigration()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">Start Full Migration</button>
+        </div>
+    </div>
+
+    <!-- Need to load common.js for parseCSV and firebase-init.js for the RTDB instance -->
+    <script src="common.js"></script>
+    <script type="module" src="firebase-init.js"></script>
+    <script type="module">
+        import { ref, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+        const logEl = document.getElementById('log');
+        function log(msg) {
+            logEl.textContent += '\n> ' + msg;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(msg);
+        }
+
+        const waitForFirebase = () => new Promise(resolve => {
+            if (window.rtdb) resolve();
+            else {
+                const interval = setInterval(() => {
+                    if (window.rtdb) { clearInterval(interval); resolve(); }
+                }, 50);
+            }
+        });
+
+        window.startMigration = async () => {
+            try {
+                log("Initializing Firebase...");
+                await waitForFirebase();
+                log("Firebase RTDB Ready.");
+
+                // 1. Migrate Products
+                log("Fetching Products CSV...");
+                const prodRes = await fetch("https://docs.google.com/spreadsheets/d/1onrTRPtJVMCVRTRI0zVm5lv_ra1PCZAnXHLpjFslMQs/export?format=csv");
+                const prodTxt = await prodRes.text();
+                const prodRows = window.parseCSV(prodTxt).slice(1);
+                
+                const products = prodRows.map((cols, i) => {
+                    if(!cols || cols.length < 2 || !cols[1].trim()) return null;
+                    const priceStr = cols[3] ? cols[3].trim() : '0';
+                    return {
+                        id: 'p' + i, 
+                        img: cols[0] ? cols[0].trim() : '', 
+                        name: cols[1] ? cols[1].trim() : '', 
+                        desc: cols[2] ? cols[2].trim() : '',
+                        priceUSD: parseFloat(priceStr.replace(/[^0-9.-]+/g, "")) || 0,
+                        oldPriceStr: cols[4] ? cols[4].trim() : '', 
+                        color: cols[6] ? cols[6].trim() : '',
+                        subCategory: cols[9] ? cols[9].trim() : '', 
+                        company: cols[10] ? cols[10].trim() : ''
+                    };
+                }).filter(p => p !== null);
+
+                log(`Parsed ${products.length} products. Uploading to RTDB...`);
+                const productsRef = ref(window.rtdb, `artifacts/${window.appId}/products`);
+                await set(productsRef, products);
+                log("Products successfully uploaded.");
+
+                // 2. Migrate Articles
+                log("Fetching Articles CSV...");
+                const artRes = await fetch("https://docs.google.com/spreadsheets/d/1dq4Z2CSUX4lPWEMCw8WTpNbkzN4SBt3B7ON5nqPemXM/export?format=csv");
+                const artTxt = await artRes.text();
+                const artRows = window.parseCSV(artTxt).slice(1);
+                
+                const articles = artRows.map((cols, i) => {
+                    if (!cols || cols.length < 5 || !cols[1]) return null;
+                    return { 
+                        id: i, 
+                        img: cols[0] ? cols[0].trim() : '', 
+                        title: cols[1] ? cols[1].trim() : '', 
+                        date: cols[2] ? cols[2].trim() : '', 
+                        excerpt: cols[3] ? cols[3].trim() : '', 
+                        content: cols[4] ? cols[4].trim() : '' 
+                    };
+                }).filter(a => a !== null);
+
+                log(`Parsed ${articles.length} articles. Uploading to RTDB...`);
+                const articlesRef = ref(window.rtdb, `artifacts/${window.appId}/articles`);
+                await set(articlesRef, articles);
+                log("Articles successfully uploaded.");
+
+                log("--- MIGRATION COMPLETE ---");
+                alert("Migration Complete! You can verify the data in your Firebase Console.");
+
+            } catch (e) {
+                log("ERROR: " + e.message);
+                console.error(e);
+            }
+        };
+    </script>
+</body>
+</html>

@@ -11,17 +11,7 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: { brand: { green: '#109B74', teal: '#1B8A98', blue: '#257EA6' } },
-                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], arabic: ['Tajawal', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
+    <script src="tailwind-config.js"></script>
 
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -30,18 +20,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
+    <link rel="stylesheet" href="common.css">
     <style>
         body { background-color: #f8fafc; color: #0f172a; transition: background-color 0.3s ease; }
         .dark body { background-color: #0b0f19; color: #e2e8f0; }
-        html[dir="rtl"] body { font-family: 'Tajawal', sans-serif !important; }
         
         .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(0, 0, 0, 0.05); }
         .dark .glass-panel { background: rgba(15, 23, 42, 0.6); border-color: rgba(255, 255, 255, 0.05); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
-        
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 155, 116, 0.3); border-radius: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #109B74; }
     </style>
 </head>
 <body class="font-sans antialiased h-screen flex flex-col overflow-hidden">
@@ -83,6 +68,14 @@
             <button onclick="switchTab('promos')" id="tab-promos" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                 Promo Codes
+            </button>
+            <button onclick="switchTab('products')" id="tab-products" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                Products Catalog
+            </button>
+            <button onclick="switchTab('articles')" id="tab-articles" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                Articles (Blog)
             </button>
             <div class="flex-1"></div>
             <button onclick="switchTab('settings')" id="tab-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 border-t border-gray-200 dark:border-gray-800">
@@ -200,6 +193,61 @@
                 </div>
             </section>
 
+            <!-- Products Section -->
+            <section id="section-products" class="max-w-6xl mx-auto space-y-6 hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <h2 class="text-2xl font-display font-bold">Products Catalog</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="window.adminAPI.downloadProductCsvTemplate()" class="bg-gray-100 text-gray-700 font-bold px-4 py-2 rounded-xl hover:bg-gray-200 transition-all text-sm border border-gray-200">Download CSV Template</button>
+                        <label class="bg-gray-100 text-gray-700 font-bold px-4 py-2 rounded-xl hover:bg-gray-200 transition-all text-sm border border-gray-200 cursor-pointer">
+                            Import CSV
+                            <input type="file" id="csv-upload" class="hidden" accept=".csv" onchange="window.adminAPI.uploadProductCsv(this)">
+                        </label>
+                        <button onclick="window.adminAPI.openProductModal()" class="bg-brand-green text-white font-bold px-4 py-2 rounded-xl hover:shadow-lg transition-all text-sm">Add New Product</button>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-2xl overflow-hidden shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Image</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Product Details</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Price (USD)</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Stock</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Category</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body" class="divide-y divide-gray-200 dark:divide-gray-800">
+                            <tr><td colspan="5" class="p-6 text-center text-gray-500">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Articles Section -->
+            <section id="section-articles" class="max-w-6xl mx-auto space-y-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-display font-bold">Articles (Blog)</h2>
+                    <button onclick="window.adminAPI.openArticleModal()" class="bg-brand-green text-white font-bold px-4 py-2 rounded-xl hover:shadow-lg transition-all text-sm">Add New Article</button>
+                </div>
+                <div class="glass-panel rounded-2xl overflow-hidden shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Image</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Title & Date</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Excerpt</th>
+                                <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articles-table-body" class="divide-y divide-gray-200 dark:divide-gray-800">
+                            <tr><td colspan="4" class="p-6 text-center text-gray-500">Loading articles...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <!-- Settings Section -->
             <section id="section-settings" class="max-w-4xl mx-auto space-y-6 hidden">
                 <h2 class="text-2xl font-display font-bold mb-6">Global Site Settings</h2>
@@ -216,6 +264,101 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 w-full max-w-2xl border border-gray-200 dark:border-gray-700 my-8">
+            <h3 class="text-xl font-display font-bold mb-4" id="product-modal-title">Add New Product</h3>
+            <input type="hidden" id="prod-id">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Product Name</label>
+                    <input type="text" id="prod-name" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Company/Brand</label>
+                    <input type="text" id="prod-company" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Image URL</label>
+                    <input type="text" id="prod-img" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Description</label>
+                    <textarea id="prod-desc" rows="3" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Price (USD)</label>
+                    <input type="number" step="0.01" id="prod-price" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Old Price (USD, Optional)</label>
+                    <input type="text" id="prod-oldprice" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Category</label>
+                    <input type="text" id="prod-cat" placeholder="e.g. Laptops" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Sub-Category</label>
+                    <input type="text" id="prod-subcat" placeholder="e.g. Gaming" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Color</label>
+                    <input type="text" id="prod-color" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Total Stock</label>
+                    <input type="number" id="prod-stock" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Stock Left</label>
+                    <input type="number" id="prod-stock-left" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="document.getElementById('product-modal').classList.replace('flex','hidden')" class="px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors">Cancel</button>
+                <button onclick="window.adminAPI.saveProduct()" class="px-4 py-2 bg-brand-green text-white rounded-lg font-bold hover:shadow-lg transition-all">Save Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Modal -->
+    <div id="article-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 w-full max-w-4xl border border-gray-200 dark:border-gray-700 my-8">
+            <h3 class="text-xl font-display font-bold mb-4" id="article-modal-title">Add New Article</h3>
+            <input type="hidden" id="art-id">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Title</label>
+                    <input type="text" id="art-title" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Image URL</label>
+                    <input type="text" id="art-img" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Date</label>
+                    <input type="text" id="art-date" placeholder="e.g. October 15, 2026" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Excerpt</label>
+                    <textarea id="art-excerpt" rows="2" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green resize-none"></textarea>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1 flex justify-between">
+                        <span>Content (Markdown format)</span>
+                        <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank" class="text-brand-green hover:underline">Markdown Guide</a>
+                    </label>
+                    <textarea id="art-content" rows="10" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-brand-green font-mono text-sm resize-y"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="document.getElementById('article-modal').classList.replace('flex','hidden')" class="px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors">Cancel</button>
+                <button onclick="window.adminAPI.saveArticle()" class="px-4 py-2 bg-brand-green text-white rounded-lg font-bold hover:shadow-lg transition-all">Save Article</button>
+            </div>
+        </div>
     </div>
 
     <!-- Edit User Modal -->
@@ -244,26 +387,31 @@
         </div>
     </div>
 
+    <!-- Common JS Logic -->
+    <script src="common.js"></script>
+
     <!-- Firebase Logic -->
+    <script type="module" src="firebase-init.js"></script>
+
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, query, orderBy, collectionGroup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, query, orderBy, collection, collectionGroup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { ref, set, remove, push, child, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
-            authDomain: "dottech-website.firebaseapp.com",
-            projectId: "dottech-website",
-            storageBucket: "dottech-website.firebasestorage.app",
-            messagingSenderId: "1081481170332",
-            appId: "1:1081481170332:web:189c741dd1b21250b48c59",
-            measurementId: "G-FL0H9KDFJ2"
-        };
+        // Wait for Firebase to initialize
+        const waitForFirebase = () => new Promise(resolve => {
+            if (window.db && window.auth) resolve();
+            else {
+                const interval = setInterval(() => {
+                    if (window.db && window.auth) { clearInterval(interval); resolve(); }
+                }, 50);
+            }
+        });
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = 'dottech-store';
+        await waitForFirebase();
+        const db = window.db;
+        const auth = window.auth;
+        const appId = window.appId;
         const adminEmail = 'dottech.syria@gmail.com';
         
         let revenueChartInstance = null;
@@ -271,22 +419,30 @@
 
         // UI Interactions
         window.switchTab = (tab) => {
-            ['dashboard', 'orders', 'users', 'promos', 'settings'].forEach(t => {
-                document.getElementById(`section-${t}`).classList.add('hidden');
+            ['dashboard', 'orders', 'users', 'promos', 'products', 'articles', 'settings'].forEach(t => {
+                const sec = document.getElementById(`section-${t}`);
+                if (sec) sec.classList.add('hidden');
                 const btn = document.getElementById(`tab-${t}`);
-                btn.classList.remove('bg-brand-green/10', 'text-brand-green');
-                btn.classList.add('text-gray-600', 'hover:bg-gray-100', 'dark:text-gray-400', 'dark:hover:bg-gray-800');
+                if (btn) {
+                    btn.classList.remove('bg-brand-green/10', 'text-brand-green');
+                    btn.classList.add('text-gray-600', 'hover:bg-gray-100', 'dark:text-gray-400', 'dark:hover:bg-gray-800');
+                }
             });
             
-            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            const targetSec = document.getElementById(`section-${tab}`);
+            if (targetSec) targetSec.classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-${tab}`);
-            activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-100', 'dark:text-gray-400', 'dark:hover:bg-gray-800');
-            activeBtn.classList.add('bg-brand-green/10', 'text-brand-green');
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-100', 'dark:text-gray-400', 'dark:hover:bg-gray-800');
+                activeBtn.classList.add('bg-brand-green/10', 'text-brand-green');
+            }
             
             if(tab === 'dashboard') window.adminAPI.loadDashboard();
             if(tab === 'orders') window.adminAPI.loadOrders();
             if(tab === 'promos') window.adminAPI.loadPromos();
             if(tab === 'users') window.adminAPI.loadUsers();
+            if(tab === 'products') window.adminAPI.loadProducts();
+            if(tab === 'articles') window.adminAPI.loadArticles();
             if(tab === 'settings') window.adminAPI.loadSettings();
         };
 
@@ -305,9 +461,9 @@
             // --- Settings & Dashboard ---
             loadSettings: async () => {
                 try {
-                    const docSnap = await getDoc(doc(db, 'artifacts', appId, 'settings', 'global'));
-                    if (docSnap.exists() && docSnap.data().exchangeRate) {
-                        globalExchangeRate = docSnap.data().exchangeRate;
+                    const snap = await get(child(ref(window.rtdb), `artifacts/${appId}/settings/global`));
+                    if (snap.exists() && snap.val().exchangeRate) {
+                        globalExchangeRate = snap.val().exchangeRate;
                         document.getElementById('setting-exchange-rate').value = globalExchangeRate;
                         document.getElementById('stat-exchange').textContent = globalExchangeRate.toLocaleString() + ' SYP';
                     }
@@ -318,7 +474,7 @@
                 const rate = parseInt(document.getElementById('setting-exchange-rate').value);
                 if(isNaN(rate) || rate <= 0) return alert("Please enter a valid exchange rate.");
                 try {
-                    await setDoc(doc(db, 'artifacts', appId, 'settings', 'global'), { exchangeRate: rate }, { merge: true });
+                    await set(ref(window.rtdb, `artifacts/${appId}/settings/global`), { exchangeRate: rate });
                     globalExchangeRate = rate;
                     document.getElementById('stat-exchange').textContent = rate.toLocaleString() + ' SYP';
                     alert("Exchange rate updated successfully. It will now apply to the storefront.");
@@ -330,7 +486,7 @@
                     await window.adminAPI.loadSettings();
                     
                     const ordersSnap = await getDocs(query(collection(db, 'artifacts', appId, 'orders'), orderBy('date', 'asc')));
-                    const usersSnap = await getDocs(collectionGroup(db, 'profile'));
+
                     
                     let totalRev = 0;
                     let totalOrders = 0;
@@ -354,7 +510,8 @@
                     document.getElementById('stat-orders').textContent = totalOrders;
                     
                     let userCount = 0;
-                    usersSnap.forEach(d => { if(d.id === 'info') userCount++; });
+                    const uSnap = await get(ref(window.rtdb, `artifacts/${appId}/users`));
+                    if (uSnap.exists()) userCount = Object.keys(uSnap.val()).length;
                     document.getElementById('stat-users').textContent = userCount;
 
                     // Draw Chart
@@ -443,10 +600,19 @@
                                 <option value="completed">Completed</option>
                                 <option value="cancelled">Cancelled</option>
                             </select>
+                            <button onclick="window.adminAPI.deleteOrder('${id}')" class="w-full mt-2 text-center py-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg text-sm font-bold transition-colors">Delete Order</button>
                         </div>`;
                     });
                     container.innerHTML = html;
                 } catch(e) { console.error(e); container.innerHTML = '<p class="text-red-500">Error loading orders.</p>'; }
+            },
+
+            deleteOrder: async (orderId) => {
+                if(!confirm("Are you sure you want to delete this order permanentely?")) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'orders', orderId));
+                    window.adminAPI.loadOrders();
+                } catch(e) { alert("Error deleting order."); console.error(e); }
             },
 
             updateStatus: async (orderId, newStatus) => {
@@ -559,59 +725,64 @@
             loadUsers: async () => {
                 const container = document.getElementById('users-container');
                 try {
-                    const snap = await getDocs(collectionGroup(db, 'profile'));
-                    if(snap.empty) { container.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-500">No registered users found.</td></tr>'; return; }
+                    const snap = await get(ref(window.rtdb, `artifacts/${appId}/users`));
+                    if (!snap.exists()) {
+                        container.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-500">No registered users found.</td></tr>';
+                        return;
+                    }
                     
                     let html = '';
-                    snap.forEach(docSnap => {
-                        if(docSnap.id === 'info') {
-                            const u = docSnap.data();
-                            const path = docSnap.ref.path; // Exact path to update this specific user
-                            
-                            let phoneClean = (u.phoneNumber || '').replace(/[^0-9+]/g, '');
-                            if(phoneClean.startsWith('09')) phoneClean = '+963' + phoneClean.substring(1);
+                    const usersVal = snap.val();
+                    Object.entries(usersVal).forEach(([uid, userData]) => {
+                        const u = userData.profile || {};
+                        let phoneClean = (u.phoneNumber || '').replace(/[^0-9+]/g, '');
+                        if(phoneClean.startsWith('09')) phoneClean = '+963' + phoneClean.substring(1);
 
-                            html += `
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                                <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">${u.firstName || ''} ${u.lastName || ''}</td>
-                                <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm">${u.email || 'N/A'}</td>
-                                <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm" dir="ltr">${u.phoneNumber || 'N/A'}</td>
-                                <td class="px-6 py-4 text-right flex justify-end gap-2">
-                                    <button onclick="window.adminAPI.openEditUser('${path}', '${u.firstName || ''}', '${u.lastName || ''}', '${u.phoneNumber || ''}')" class="text-gray-500 hover:text-brand-green bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Edit</button>
-                                    <a href="https://wa.me/${phoneClean}" target="_blank" class="text-white bg-[#25D366] hover:bg-[#20b858] px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Chat</a>
-                                </td>
-                            </tr>`;
-                        }
+                        html += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                            <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">${u.firstName || ''} ${u.lastName || ''}</td>
+                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm">${u.email || 'N/A'}</td>
+                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-sans text-sm" dir="ltr">${u.phoneNumber || 'N/A'}</td>
+                            <td class="px-6 py-4 text-right flex justify-end gap-2">
+                                <button onclick="window.adminAPI.openEditUser('${uid}')" class="text-gray-500 hover:text-brand-green bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Edit</button>
+                                <a href="https://wa.me/${phoneClean}" target="_blank" class="text-white bg-[#25D366] hover:bg-[#20b858] px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Chat</a>
+                            </td>
+                        </tr>`;
                     });
                     container.innerHTML = html;
                 } catch(e) { 
                     console.error(e); 
-                    container.innerHTML = '<tr><td colspan="4" class="text-red-500 p-6 text-sm font-medium">Error loading users. Ensure Firestore Rules allow collectionGroup reading.</td></tr>'; 
+                    container.innerHTML = '<tr><td colspan="4" class="text-red-500 p-6 text-sm font-medium">Error loading users.</td></tr>'; 
                 }
             },
 
-            openEditUser: (path, fname, lname, phone) => {
-                document.getElementById('edit-user-path').value = path;
-                document.getElementById('edit-user-fname').value = fname;
-                document.getElementById('edit-user-lname').value = lname;
-                document.getElementById('edit-user-phone').value = phone;
-                
-                document.getElementById('edit-user-modal').classList.remove('hidden');
-                document.getElementById('edit-user-modal').classList.add('flex');
+            openEditUser: async (uid) => {
+                try {
+                    const snap = await get(ref(window.rtdb, `artifacts/${appId}/users/${uid}/profile`));
+                    if (!snap.exists()) return alert("User profile not found.");
+                    const u = snap.val();
+                    document.getElementById('edit-user-path').value = uid;
+                    document.getElementById('edit-user-fname').value = u.firstName || '';
+                    document.getElementById('edit-user-lname').value = u.lastName || '';
+                    document.getElementById('edit-user-phone').value = u.phoneNumber || '';
+                    
+                    document.getElementById('edit-user-modal').classList.remove('hidden');
+                    document.getElementById('edit-user-modal').classList.add('flex');
+                } catch(e) { console.error(e); }
             },
 
             saveEditedUser: async () => {
-                const path = document.getElementById('edit-user-path').value;
-                const f = document.getElementById('edit-user-fname').value;
-                const l = document.getElementById('edit-user-lname').value;
-                const p = document.getElementById('edit-user-phone').value;
+                const uid = document.getElementById('edit-user-path').value;
+                const f = document.getElementById('edit-user-fname').value.trim();
+                const l = document.getElementById('edit-user-lname').value.trim();
+                const p = document.getElementById('edit-user-phone').value.trim();
 
-                if(!path || !f) return alert("First name is required.");
+                if(!uid || !f) return alert("First name is required.");
 
                 try {
-                    // We construct a document reference directly from the path string
-                    const userRef = doc(db, path);
-                    await updateDoc(userRef, { firstName: f, lastName: l, phoneNumber: p });
+                    const snap = await get(ref(window.rtdb, `artifacts/${appId}/users/${uid}/profile`));
+                    const currentP = snap.exists() ? snap.val() : {};
+                    await set(ref(window.rtdb, `artifacts/${appId}/users/${uid}/profile`), { ...currentP, firstName: f, lastName: l, phoneNumber: p });
                     closeEditModal();
                     window.adminAPI.loadUsers();
                     alert("Customer profile updated successfully.");
@@ -665,6 +836,324 @@
                     await deleteDoc(doc(db, 'artifacts', appId, 'promos', promoId));
                     window.adminAPI.loadPromos();
                 } catch(e) { alert("Error deleting promo."); console.error(e); }
+            },
+
+            // --- Products ---
+            loadProducts: async () => {
+                const tbody = document.getElementById('products-table-body');
+                try {
+                    const snap = await get(child(ref(window.rtdb), `artifacts/${appId}/products`));
+                    if (!snap.exists()) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-gray-500">No products found.</td></tr>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    // The RTDB data might be an object or an array depending on how it was pushed.
+                    const val = snap.val();
+                    const entries = Array.isArray(val) ? val.map((v, i) => [i.toString(), v]).filter(x => x[1]) : Object.entries(val);
+                    
+                    entries.forEach(([key, p]) => {
+                        html += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors group">
+                            <td class="px-4 py-3"><img src="${p.img}" class="w-12 h-12 object-cover rounded bg-white" onerror="this.src='https://placehold.co/100?text=P'"></td>
+                            <td class="px-4 py-3">
+                                <div class="font-bold text-gray-900 dark:text-white">${p.name}</div>
+                                <div class="text-xs text-gray-500">${p.company || 'No Brand'}</div>
+                            </td>
+                            <td class="px-4 py-3 font-bold text-brand-green">$${p.priceUSD}</td>
+                            <td class="px-4 py-3">
+                                <div class="text-sm ${p.stockLeft <= 5 ? 'text-red-500 font-bold' : 'text-gray-600 dark:text-gray-400'}">${p.stockLeft || 0} / ${p.stock || 0}</div>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${p.category || ''} ${p.subCategory ? `> ${p.subCategory}` : ''}</td>
+                            <td class="px-4 py-3 text-right">
+                                <button onclick="window.adminAPI.openProductModal('${key}')" class="text-brand-blue hover:text-brand-green font-medium text-sm px-2 py-1 transition-colors">Edit</button>
+                                <button onclick="window.adminAPI.deleteProduct('${key}')" class="text-red-400 hover:text-red-600 font-medium text-sm px-2 py-1 transition-colors">Delete</button>
+                            </td>
+                        </tr>`;
+                    });
+                    tbody.innerHTML = html;
+                } catch (e) {
+                    console.error(e);
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-red-500">Error loading products.</td></tr>';
+                }
+            },
+
+            openProductModal: async (key = null) => {
+                const modal = document.getElementById('product-modal');
+                const title = document.getElementById('product-modal-title');
+                
+                // reset form
+                document.getElementById('prod-id').value = '';
+                document.getElementById('prod-name').value = '';
+                document.getElementById('prod-company').value = '';
+                document.getElementById('prod-img').value = '';
+                document.getElementById('prod-desc').value = '';
+                document.getElementById('prod-price').value = '';
+                document.getElementById('prod-oldprice').value = '';
+                document.getElementById('prod-cat').value = '';
+                document.getElementById('prod-subcat').value = '';
+                document.getElementById('prod-color').value = '';
+                document.getElementById('prod-stock').value = '';
+                document.getElementById('prod-stock-left').value = '';
+
+                if (key) {
+                    title.textContent = 'Edit Product';
+                    try {
+                        const snap = await get(child(ref(window.rtdb), `artifacts/${appId}/products/${key}`));
+                        if (snap.exists()) {
+                            const p = snap.val();
+                            document.getElementById('prod-id').value = key;
+                            document.getElementById('prod-name').value = p.name || '';
+                            document.getElementById('prod-company').value = p.company || '';
+                            document.getElementById('prod-img').value = p.img || '';
+                            document.getElementById('prod-desc').value = p.desc || '';
+                            document.getElementById('prod-price').value = p.priceUSD || '';
+                            document.getElementById('prod-oldprice').value = p.oldPriceStr || '';
+                            document.getElementById('prod-cat').value = p.category || '';
+                            document.getElementById('prod-subcat').value = p.subCategory || '';
+                            document.getElementById('prod-color').value = p.color || '';
+                            document.getElementById('prod-stock').value = p.stock || 0;
+                            document.getElementById('prod-stock-left').value = p.stockLeft !== undefined ? p.stockLeft : (p.stock || 0);
+                        }
+                    } catch(e) { console.error("Could not load product details", e); }
+                } else {
+                    title.textContent = 'Add New Product';
+                }
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            },
+
+            saveProduct: async () => {
+                const idVal = document.getElementById('prod-id').value;
+                const p = {
+                    name: document.getElementById('prod-name').value.trim(),
+                    company: document.getElementById('prod-company').value.trim(),
+                    img: document.getElementById('prod-img').value.trim(),
+                    desc: document.getElementById('prod-desc').value.trim(),
+                    priceUSD: parseFloat(document.getElementById('prod-price').value) || 0,
+                    oldPriceStr: document.getElementById('prod-oldprice').value.trim(),
+                    category: document.getElementById('prod-cat').value.trim(),
+                    subCategory: document.getElementById('prod-subcat').value.trim(),
+                    color: document.getElementById('prod-color').value.trim(),
+                    stock: parseInt(document.getElementById('prod-stock').value) || 0,
+                    stockLeft: parseInt(document.getElementById('prod-stock-left').value) || 0
+                };
+
+                if (!p.name || p.priceUSD <= 0) return alert("Product name and valid price are required.");
+
+                try {
+                    let keyToUse = idVal;
+                    if (!keyToUse) {
+                        // Creating a new product
+                        p.id = 'p' + Date.now(); // unique string ID
+                        keyToUse = p.id;
+                    } else {
+                        // Ensure we don't wipe out the existing id property if present
+                        p.id = idVal.startsWith('p') ? idVal : 'p' + idVal; 
+                    }
+                    
+                    await set(ref(window.rtdb, `artifacts/${appId}/products/${keyToUse}`), p);
+                    
+                    document.getElementById('product-modal').classList.replace('flex', 'hidden');
+                    window.adminAPI.loadProducts();
+                } catch(e) { console.error(e); alert("Error saving product."); }
+            },
+
+            deleteProduct: async (key) => {
+                if(!confirm(`Are you sure you want to delete this product?`)) return;
+                try {
+                    await remove(ref(window.rtdb, `artifacts/${appId}/products/${key}`));
+                    window.adminAPI.loadProducts();
+                } catch(e) { console.error(e); alert("Error deleting product."); }
+            },
+
+            // --- Articles ---
+            loadArticles: async () => {
+                const tbody = document.getElementById('articles-table-body');
+                try {
+                    const snap = await get(child(ref(window.rtdb), `artifacts/${appId}/articles`));
+                    if (!snap.exists()) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-500">No articles found.</td></tr>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    const val = snap.val();
+                    const entries = Array.isArray(val) ? val.map((v, i) => [i.toString(), v]).filter(x => x[1]) : Object.entries(val);
+                    
+                    entries.forEach(([key, a]) => {
+                        html += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors group">
+                            <td class="px-4 py-3"><img src="${a.img}" class="w-16 h-10 object-cover rounded bg-white" onerror="this.src='https://placehold.co/160x100?text=Art'"></td>
+                            <td class="px-4 py-3">
+                                <div class="font-bold text-gray-900 dark:text-white line-clamp-1">${a.title}</div>
+                                <div class="text-xs text-brand-green tracking-widest uppercase">${a.date || ''}</div>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">${a.excerpt || ''}</td>
+                            <td class="px-4 py-3 text-right">
+                                <button onclick="window.adminAPI.openArticleModal('${key}')" class="text-brand-blue hover:text-brand-green font-medium text-sm px-2 py-1 transition-colors">Edit</button>
+                                <button onclick="window.adminAPI.deleteArticle('${key}')" class="text-red-400 hover:text-red-600 font-medium text-sm px-2 py-1 transition-colors">Delete</button>
+                            </td>
+                        </tr>`;
+                    });
+                    tbody.innerHTML = html;
+                } catch (e) {
+                    console.error(e);
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-red-500">Error loading articles.</td></tr>';
+                }
+            },
+
+            openArticleModal: async (key = null) => {
+                const modal = document.getElementById('article-modal');
+                const title = document.getElementById('article-modal-title');
+                
+                // reset form
+                document.getElementById('art-id').value = '';
+                document.getElementById('art-title').value = '';
+                document.getElementById('art-img').value = '';
+                document.getElementById('art-date').value = '';
+                document.getElementById('art-excerpt').value = '';
+                document.getElementById('art-content').value = '';
+
+                if (key) {
+                    title.textContent = 'Edit Article';
+                    try {
+                        const snap = await get(child(ref(window.rtdb), `artifacts/${appId}/articles/${key}`));
+                        if (snap.exists()) {
+                            const a = snap.val();
+                            document.getElementById('art-id').value = key;
+                            document.getElementById('art-title').value = a.title || '';
+                            document.getElementById('art-img').value = a.img || '';
+                            document.getElementById('art-date').value = a.date || '';
+                            document.getElementById('art-excerpt').value = a.excerpt || '';
+                            document.getElementById('art-content').value = a.content || '';
+                        }
+                    } catch(e) { console.error("Could not load article details", e); }
+                } else {
+                    title.textContent = 'Add New Article';
+                }
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            },
+
+            saveArticle: async () => {
+                const idVal = document.getElementById('art-id').value;
+                const a = {
+                    title: document.getElementById('art-title').value.trim(),
+                    img: document.getElementById('art-img').value.trim(),
+                    date: document.getElementById('art-date').value.trim(),
+                    excerpt: document.getElementById('art-excerpt').value.trim(),
+                    content: document.getElementById('art-content').value.trim()
+                };
+
+                if (!a.title) return alert("Article title is required.");
+
+                try {
+                    let keyToUse = idVal;
+                    if (!keyToUse) {
+                        a.id = Date.now(); // numeric ID matching previous structure
+                        keyToUse = a.id.toString();
+                    } else {
+                        a.id = parseInt(idVal) || idVal;
+                    }
+                    
+                    await set(ref(window.rtdb, `artifacts/${appId}/articles/${keyToUse}`), a);
+                    
+                    document.getElementById('article-modal').classList.replace('flex', 'hidden');
+                    window.adminAPI.loadArticles();
+                } catch(e) { console.error(e); alert("Error saving article."); }
+            },
+
+            deleteArticle: async (key) => {
+                if(!confirm(`Are you sure you want to delete this article?`)) return;
+                try {
+                    await remove(ref(window.rtdb, `artifacts/${appId}/articles/${key}`));
+                    window.adminAPI.loadArticles();
+                } catch(e) { console.error(e); alert("Error deleting article."); }
+            },
+
+            // --- CSV Operations ---
+            downloadProductCsvTemplate: () => {
+                const headers = ['id', 'name', 'company', 'img', 'desc', 'priceUSD', 'oldPriceStr', 'category', 'subCategory', 'color', 'stock', 'stockLeft'];
+                const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" +
+                    ",Example Product,Brand Name,https://example.com/img.jpg,Product Description,99.99,,Category,SubCategory,Black,10,10";
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "dottech_products_template.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            },
+
+            uploadProductCsv: (input) => {
+                const file = input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const text = e.target.result;
+                    const lines = text.split(/\r?\n/);
+                    if (lines.length < 2) return alert("CSV file is empty or invalid.");
+                    
+                    const headers = lines[0].split(',').map(h => h.trim());
+                    const products = [];
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i].trim()) continue;
+                        
+                        // Basic CSV parsing (handles quotes)
+                        const values = [];
+                        let current = '';
+                        let inQuotes = false;
+                        for (let char of lines[i]) {
+                            if (char === '"') inQuotes = !inQuotes;
+                            else if (char === ',' && !inQuotes) {
+                                values.push(current.trim());
+                                current = '';
+                            } else current += char;
+                        }
+                        values.push(current.trim());
+                        
+                        const p = {};
+                        headers.forEach((h, idx) => {
+                            let val = values[idx] || '';
+                            // Remove quotes if present
+                            if (val.startsWith('"') && val.endsWith('"')) val = val.substring(1, val.length - 1);
+                            
+                            if (h === 'priceUSD') p[h] = parseFloat(val) || 0;
+                            else if (h === 'stock' || h === 'stockLeft') p[h] = parseInt(val) || 0;
+                            else p[h] = val;
+                        });
+                        
+                        if (p.name) products.push(p);
+                    }
+                    
+                    if (products.length === 0) return alert("No valid products found in CSV.");
+                    
+                    if (!confirm(`Import ${products.length} products? This will overwrite existing products with the same ID.`)) return;
+                    
+                    try {
+                        const updates = {};
+                        products.forEach(p => {
+                            const key = p.id || 'p' + Date.now() + Math.floor(Math.random() * 1000);
+                            delete p.id;
+                            p.id = key; // Ensure id is present in the object
+                            updates[key] = p;
+                        });
+                        
+                        for (const [key, p] of Object.entries(updates)) {
+                            await set(ref(window.rtdb, `artifacts/${appId}/products/${key}`), p);
+                        }
+                        
+                        alert(`Successfully imported ${products.length} products.`);
+                        window.adminAPI.loadProducts();
+                        input.value = ''; // Reset input
+                    } catch (e) { console.error(e); alert("Error importing products."); }
+                };
+                reader.readAsText(file);
             }
         };
 
@@ -693,18 +1182,6 @@
             signOut(auth).then(() => window.location.href = 'index.html');
         });
 
-        // Dark Mode Logic
-        window.toggleDarkMode = () => {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('dottech_theme', isDark ? 'dark' : 'light');
-            document.getElementById('theme-icon').innerHTML = isDark 
-                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>'
-                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
-        };
-        if (localStorage.getItem('dottech_theme') === 'dark' || (!localStorage.getItem('dottech_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            toggleDarkMode();
-        }
     </script>
 </body>
 </html>

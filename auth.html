@@ -12,34 +12,10 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            green: '#109B74',
-                            teal: '#1B8A98',
-                            blue: '#257EA6',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif'],
-                        arabic: ['Tajawal', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="tailwind-config.js"></script>
 
+    <link rel="stylesheet" href="common.css">
     <style>
-        body {
-            background-color: #fafafa;
-            color: #0a0a0a;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
 
         .text-gradient {
             background: linear-gradient(135deg, #109B74 0%, #257EA6 100%);
@@ -199,27 +175,31 @@
         </div>
     </div>
 
+    <!-- Common JS Logic -->
+    <script src="common.js"></script>
+
     <!-- Firebase Logic -->
+    <script type="module" src="firebase-init.js"></script>
+
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCV7G2oYqi5D2D94AkaWXUFQ3zEIgsg40s",
-            authDomain: "dottech-website.firebaseapp.com",
-            projectId: "dottech-website",
-            storageBucket: "dottech-website.firebasestorage.app",
-            messagingSenderId: "1081481170332",
-            appId: "1:1081481170332:web:189c741dd1b21250b48c59",
-            measurementId: "G-FL0H9KDFJ2"
-        };
+        // Wait for Firebase to initialize
+        const waitForFirebase = () => new Promise(resolve => {
+            if (window.db && window.auth) resolve();
+            else {
+                const interval = setInterval(() => {
+                    if (window.db && window.auth) { clearInterval(interval); resolve(); }
+                }, 50);
+            }
+        });
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        await waitForFirebase();
+        const db = window.db;
+        const auth = window.auth;
         const provider = new GoogleAuthProvider();
-        const appId = 'dottech-store';
+        const appId = window.appId;
 
         window.showError = (error) => {
             const errEl = document.getElementById('error-msg');
