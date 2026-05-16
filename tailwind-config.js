@@ -8,6 +8,7 @@ tailwind.config = {
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
                 display: ['Outfit', 'sans-serif'],
+                audiowide: ['Audiowide', 'cursive'],
                 arabic: ['Tajawal', 'sans-serif'],
             }
         }

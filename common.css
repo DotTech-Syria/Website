@@ -25,6 +25,7 @@ html.dark .border-gray-100, html.dark .border-gray-200 { border-color: rgba(255,
 
 /* Arabic Font Enforcement */
 html[dir="rtl"] body, html[dir="rtl"] .font-display, html[dir="rtl"] .font-sans { font-family: 'Tajawal', sans-serif !important; }
+.font-audiowide { font-family: 'Audiowide', cursive; }
 
 ::selection { background-color: rgba(16, 155, 116, 0.2); color: #109B74; }
 

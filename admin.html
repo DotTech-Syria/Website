@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -34,10 +34,14 @@
     <!-- Top Navigation -->
     <nav class="glass-panel z-50 px-6 py-4 flex justify-between items-center shadow-sm shrink-0">
         <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-blue rounded-xl flex items-center justify-center shadow-lg text-white font-display font-bold text-xl">D</div>
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="./logo.png" alt="DotTech Logo" class="h-8 object-contain" onerror="this.style.display='none'">
+                <span class="font-['Audiowide'] text-xl tracking-tight text-gray-900 dark:text-white">DotTech</span>
+            </a>
+            <div class="h-8 w-px bg-gray-200 dark:border-gray-800 mx-2"></div>
             <div>
-                <h1 class="font-display font-bold text-xl leading-none">DotTech Admin</h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Enterprise Control Center</p>
+                <h1 class="font-display font-bold text-lg leading-none">Admin</h1>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">Control Center</p>
             </div>
         </div>
         <div class="flex items-center gap-4">

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap"
         rel="stylesheet">
 
     <!-- Tailwind CSS -->
@@ -38,14 +38,21 @@
 
     <nav class="fixed w-full top-0 z-50 glass-nav transition-all duration-300">
         <div class="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="store.html"
-                class="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-medium">
-                <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Back to Store
-            </a>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <img src="./logo.png" alt="DotTech Logo" class="h-6 object-contain" onerror="this.style.display='none'">
+                    <span class="font-['Audiowide'] text-xl tracking-tight text-gray-900 dark:text-white transition-transform group-hover:scale-105">DotTech</span>
+                </a>
+                <div class="h-6 w-px bg-gray-200 dark:border-gray-800"></div>
+                <a href="store.html"
+                    class="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-medium">
+                    <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Store
+                </a>
+            </div>
             <div class="flex items-center gap-3">
                 <span id="nav-currency" class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">USD</span>
                 <button onclick="window.authAPI.logout()"
