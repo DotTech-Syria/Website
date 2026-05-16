@@ -524,51 +524,69 @@
         async function loadPreviewStore() {
             try {
                 const allProducts = await window.dbAPI.fetchProducts();
-                const products = allProducts.slice(0, 4);
+                if (allProducts.length === 0) { 
+                    document.getElementById('preview-store-grid').innerHTML = "<div class='col-span-full text-center text-gray-500 py-10'>No preview items.</div>"; 
+                    return; 
+                }
 
-                const grid = document.getElementById('preview-store-grid');
-                if (products.length === 0) { grid.innerHTML = "<div class='col-span-full text-center text-gray-500 py-10'>No preview items.</div>"; return; }
+                const refreshProducts = () => {
+                    // Randomize and take 4
+                    const products = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 4);
 
-                const addTxt = translations[currentLang]?.btn_add || 'Add';
-                grid.innerHTML = products.map((p, i) => {
-                    let tags = '';
-                    if (p.subCategory || (p.color && p.color.toLowerCase() !== 'no color')) {
-                        tags = `<div class="flex flex-wrap gap-2 mb-3">`;
-                        if (p.subCategory) tags += `<span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-[10px] uppercase tracking-wider text-gray-700 dark:text-gray-300 font-bold">${p.subCategory}</span>`;
-                        if (p.color && p.color.toLowerCase() !== 'no color') tags += `<span class="px-2.5 py-1 border border-gray-200 dark:border-gray-700 rounded-md text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold">${p.color}</span>`;
-                        tags += `</div>`;
-                    }
+                    const grid = document.getElementById('preview-store-grid');
+                    const addTxt = translations[currentLang]?.btn_add || 'Add';
+                    
+                    grid.style.opacity = '0';
+                    setTimeout(() => {
+                        grid.innerHTML = products.map((p, i) => {
+                            let tags = '';
+                            if (p.subCategory || (p.color && p.color.toLowerCase() !== 'no color')) {
+                                tags = `<div class="flex flex-wrap gap-2 mb-3">`;
+                                if (p.subCategory) tags += `<span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-[10px] uppercase tracking-wider text-gray-700 dark:text-gray-300 font-bold">${p.subCategory}</span>`;
+                                if (p.color && p.color.toLowerCase() !== 'no color') tags += `<span class="px-2.5 py-1 border border-gray-200 dark:border-gray-700 rounded-md text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold">${p.color}</span>`;
+                                tags += `</div>`;
+                            }
 
-                    let brand = p.company ? `<div class="text-[11px] font-bold text-brand-green uppercase tracking-widest mb-2 flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>${p.company}</div>` : '';
+                            let brand = p.company ? `<div class="text-[11px] font-bold text-brand-green uppercase tracking-widest mb-2 flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>${p.company}</div>` : '';
 
-                    let priceHtml = p.oldPriceStr
-                        ? `<div class="flex flex-col items-start"><span class="text-sm font-medium text-gray-400 line-through leading-none mb-1">${formatPrice(parseFloat(p.oldPriceStr.replace(/[^0-9.-]+/g, "")) || 0)}</span><span class="text-2xl font-display font-bold text-red-500 leading-none currency-display" data-usd="${p.priceUSD}">${formatPrice(p.priceUSD)}</span></div>`
-                        : `<span class="text-2xl font-display font-bold text-gray-900 dark:text-white leading-none currency-display" data-usd="${p.priceUSD}">${formatPrice(p.priceUSD)}</span>`;
+                            let priceHtml = p.oldPriceStr
+                                ? `<div class="flex flex-col items-start"><span class="text-sm font-medium text-gray-400 line-through leading-none mb-1">${formatPrice(parseFloat(p.oldPriceStr.replace(/[^0-9.-]+/g, "")) || 0)}</span><span class="text-2xl font-display font-bold text-red-500 leading-none currency-display" data-usd="${p.priceUSD}">${formatPrice(p.priceUSD)}</span></div>`
+                                : `<span class="text-2xl font-display font-bold text-gray-900 dark:text-white leading-none currency-display" data-usd="${p.priceUSD}">${formatPrice(p.priceUSD)}</span>`;
 
-                    let saleBadge = p.oldPriceStr ? `<div class="absolute top-4 start-4 bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg z-10 uppercase tracking-widest animate-pulse">Sale</div>` : '';
+                            let saleBadge = p.oldPriceStr ? `<div class="absolute top-4 start-4 bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg z-10 uppercase tracking-widest animate-pulse">Sale</div>` : '';
 
-                    return `
-                    <div class="product-card flex flex-col h-full group reveal delay-${i * 100}" onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">
-                        ${saleBadge}
-                        <div class="aspect-[4/3] bg-gray-50 dark:bg-[#111827] relative overflow-hidden p-6 border-b border-gray-100/50 dark:border-gray-800 product-image-container flex items-center justify-center">
-                            <img src="${p.img}" alt="${p.name}" class="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://placehold.co/400x300/f8f9fa/a1a1aa?text=Image+Unavailable'">
-                        </div>
-                        <div class="p-6 flex-1 flex flex-col">
-                            ${brand}${tags}
-                            <h3 class="text-lg md:text-xl font-display font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 leading-tight group-hover:text-brand-green transition-colors">${p.name}</h3>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-2 flex-1 font-sans leading-relaxed">${p.desc}</p>
-                            
-                            <div class="flex items-end justify-between mt-auto pt-5 border-t border-gray-100 dark:border-gray-800">
-                                ${priceHtml}
-                                <button onclick="event.stopPropagation(); addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.priceUSD}', '${p.img}')" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-brand-green dark:hover:bg-brand-green dark:hover:text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                    ${addTxt}
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-                }).join('');
-            } catch (e) { document.getElementById('preview-store-grid').innerHTML = "<div class='col-span-full text-red-500 font-medium text-center py-10'>Could not load preview products.</div>"; }
+                            return `
+                            <div class="product-card flex flex-col h-full group reveal active delay-${i * 100}" onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">
+                                ${saleBadge}
+                                <div class="aspect-[4/3] bg-gray-50 dark:bg-[#111827] relative overflow-hidden p-6 border-b border-gray-100/50 dark:border-gray-800 product-image-container flex items-center justify-center">
+                                    <img src="${p.img}" alt="${p.name}" class="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://placehold.co/400x300/f8f9fa/a1a1aa?text=Image+Unavailable'">
+                                </div>
+                                <div class="p-6 flex-1 flex flex-col">
+                                    ${brand}${tags}
+                                    <h3 class="text-lg md:text-xl font-display font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 leading-tight group-hover:text-brand-green transition-colors">${p.name}</h3>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-2 flex-1 font-sans leading-relaxed">${p.desc}</p>
+                                    
+                                    <div class="flex items-end justify-between mt-auto pt-5 border-t border-gray-100 dark:border-gray-800">
+                                        ${priceHtml}
+                                        <button onclick="event.stopPropagation(); addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.priceUSD}', '${p.img}')" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-brand-green dark:hover:bg-brand-green dark:hover:text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                            ${addTxt}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }).join('');
+                        grid.style.opacity = '1';
+                    }, 300);
+                };
+
+                refreshProducts();
+                setInterval(refreshProducts, 15000);
+
+            } catch (e) { 
+                console.error(e);
+                document.getElementById('preview-store-grid').innerHTML = "<div class='col-span-full text-red-500 font-medium text-center py-10'>Could not load preview products.</div>"; 
+            }
         }
 
         loadPreviewStore();
